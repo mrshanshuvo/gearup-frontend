@@ -6,10 +6,10 @@ export const createGearSchema = z.object({
     .string()
     .min(10, { error: "Description must be at least 10 characters long" }),
   brand: z.string().min(1, { error: "Brand name is required" }),
-  pricePerDay: z.coerce
+  pricePerDay: z
     .number({ error: "Price per day must be a number" })
     .positive({ error: "Price per day must be greater than zero" }),
-  stock: z.coerce
+  stock: z
     .number({ error: "Stock must be a number" })
     .int({ error: "Stock must be a whole number" })
     .nonnegative({ error: "Stock cannot be negative" }),
@@ -19,7 +19,27 @@ export const createGearSchema = z.object({
   categoryId: z.string().min(1, { error: "Please select a category" }),
 });
 
-export const updateGearSchema = createGearSchema.partial();
+export const updateGearSchema = z.object({
+  name: z.string().min(1, { error: "Gear name cannot be empty" }).optional(),
+  description: z
+    .string()
+    .min(10, { error: "Description must be at least 10 characters long" })
+    .optional(),
+  brand: z.string().min(1, { error: "Brand cannot be empty" }).optional(),
+  pricePerDay: z
+    .number()
+    .positive({ error: "Price per day must be greater than zero" })
+    .optional(),
+  stock: z
+    .number()
+    .int()
+    .nonnegative({ error: "Stock cannot be negative" })
+    .optional(),
+  imageUrl: z
+    .union([z.url({ error: "Invalid image URL format" }), z.literal("")])
+    .optional(),
+  categoryId: z.string().optional(),
+});
 
 export type CreateGearInput = z.infer<typeof createGearSchema>;
 export type UpdateGearInput = z.infer<typeof updateGearSchema>;

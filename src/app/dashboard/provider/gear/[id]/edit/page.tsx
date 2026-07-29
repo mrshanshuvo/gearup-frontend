@@ -141,7 +141,11 @@ export default function EditGearPage({
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                   Price per Day ($)
                 </label>
-                <Input type="number" step="0.01" {...register("pricePerDay")} />
+                <Input
+                  type="number"
+                  step="0.01"
+                  {...register("pricePerDay", { valueAsNumber: true })}
+                />
                 {errors.pricePerDay && (
                   <p className="text-xs text-red-500">
                     {errors.pricePerDay.message}
@@ -153,7 +157,10 @@ export default function EditGearPage({
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                   Stock Quantity
                 </label>
-                <Input type="number" {...register("stock")} />
+                <Input
+                  type="number"
+                  {...register("stock", { valueAsNumber: true })}
+                />
                 {errors.stock && (
                   <p className="text-xs text-red-500">{errors.stock.message}</p>
                 )}

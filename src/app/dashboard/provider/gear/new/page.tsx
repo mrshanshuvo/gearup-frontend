@@ -124,7 +124,7 @@ export default function AddGearPage() {
                 <Input
                   type="number"
                   step="0.01"
-                  {...register("pricePerDay")}
+                  {...register("pricePerDay", { valueAsNumber: true })}
                   placeholder="25.00"
                 />
                 {errors.pricePerDay && (
@@ -138,7 +138,11 @@ export default function AddGearPage() {
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                   Available Stock Quantity
                 </label>
-                <Input type="number" {...register("stock")} placeholder="1" />
+                <Input
+                  type="number"
+                  {...register("stock", { valueAsNumber: true })}
+                  placeholder="1"
+                />
                 {errors.stock && (
                   <p className="text-xs text-red-500">{errors.stock.message}</p>
                 )}
