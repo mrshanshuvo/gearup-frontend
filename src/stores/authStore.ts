@@ -23,7 +23,10 @@ export const useAuthStore = create<AuthState>()(
     }),
     {
       name: "gearup-auth",
-      partialize: (state) => ({ accessToken: state.accessToken, user: state.user }),
+      partialize: (state) => ({
+        accessToken: state.accessToken,
+        user: state.user,
+      }),
     }
   )
 );

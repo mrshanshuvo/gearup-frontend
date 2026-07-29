@@ -1,6 +1,7 @@
 export type Role = "Admin" | "Customer" | "Provider";
 export type ActiveStatus = "Active" | "Inactive";
-export type RentalOrderStatus = "PLACED" | "CONFIRMED" | "PAID" | "PICKED_UP" | "RETURNED" | "CANCELLED";
+export type RentalOrderStatus =
+  "PLACED" | "CONFIRMED" | "PAID" | "PICKED_UP" | "RETURNED" | "CANCELLED";
 export type PaymentStatus = "PENDING" | "COMPLETED" | "FAILED";
 
 export interface User {
