@@ -22,11 +22,6 @@ export const registerSchema = z.object({
   role: z.enum(["Customer", "Provider"], {
     message: "Role must be Customer or Provider",
   }),
-  profile_image: z
-    .string()
-    .url({ message: "Invalid image URL" })
-    .optional()
-    .or(z.literal("")),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;

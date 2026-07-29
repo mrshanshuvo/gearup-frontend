@@ -147,22 +147,6 @@ export default function RegisterPage() {
                 </p>
               )}
             </div>
-
-            <div className="space-y-1 text-left">
-              <label className="text-sm font-medium text-slate-700 dark:text-slate-300">
-                Profile Image URL (Optional)
-              </label>
-              <Input
-                type="url"
-                placeholder="https://example.com/avatar.jpg"
-                {...register("profile_image")}
-              />
-              {errors.profile_image && (
-                <p className="text-xs text-red-500">
-                  {errors.profile_image.message}
-                </p>
-              )}
-            </div>
           </CardContent>
 
           <CardFooter className="flex flex-col space-y-4">
