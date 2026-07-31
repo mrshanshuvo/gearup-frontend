@@ -45,7 +45,7 @@ export default function ProfilePage() {
   if (isLoading) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
       </div>
     );
   }
@@ -65,7 +65,7 @@ export default function ProfilePage() {
         {/* Left Column: Account Overview Card */}
         <Card className="h-fit border-slate-200 dark:border-slate-800">
           <CardContent className="space-y-4 p-6 text-center">
-            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100 text-3xl font-bold text-emerald-600 shadow-inner dark:bg-emerald-950">
+            <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-blue-100 text-3xl font-bold text-blue-600 shadow-inner dark:bg-blue-950">
               {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
             </div>
 
@@ -78,7 +78,7 @@ export default function ProfilePage() {
 
             <Badge
               variant="outline"
-              className="border-emerald-600 text-emerald-600"
+              className="border-blue-600 text-blue-600 font-bold"
             >
               <Shield className="mr-1 h-3 w-3" /> {user?.role} Account
             </Badge>
@@ -160,7 +160,7 @@ export default function ProfilePage() {
                 <Button
                   type="submit"
                   disabled={updateProfile.isPending}
-                  className="bg-emerald-600 px-6 font-bold text-white hover:bg-emerald-700"
+                  className="bg-blue-600 px-6 font-bold text-white hover:bg-blue-700"
                 >
                   {updateProfile.isPending ? (
                     <>

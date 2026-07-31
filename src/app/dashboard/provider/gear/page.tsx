@@ -44,7 +44,7 @@ export default function MyGearInventoryPage() {
           onClick={() =>
             (window.location.href = "/dashboard/provider/gear/new")
           }
-          className="bg-emerald-600 font-bold text-white hover:bg-emerald-700"
+          className="bg-blue-600 font-bold text-white hover:bg-blue-700"
         >
           <PlusCircle className="mr-2 h-4 w-4" /> Add New Gear
         </Button>
@@ -52,7 +52,7 @@ export default function MyGearInventoryPage() {
 
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       ) : gearItems.length === 0 ? (
         <div className="space-y-4 rounded-2xl border border-slate-200 bg-white py-16 text-center dark:border-slate-800 dark:bg-slate-900">
@@ -68,7 +68,7 @@ export default function MyGearInventoryPage() {
             onClick={() =>
               (window.location.href = "/dashboard/provider/gear/new")
             }
-            className="bg-emerald-600 font-bold text-white"
+            className="bg-blue-600 font-bold text-white hover:bg-blue-700"
           >
             Create First Listing
           </Button>
@@ -120,19 +120,19 @@ export default function MyGearInventoryPage() {
                         variant="outline"
                         className="border-slate-300 dark:border-slate-700"
                       >
-                        <Tag className="mr-1 h-3 w-3 text-emerald-600" />
+                        <Tag className="mr-1 h-3 w-3 text-blue-600" />
                         {gear.category?.name || "General"}
                       </Badge>
                     </td>
-                    <td className="p-4 font-bold text-emerald-600 dark:text-emerald-400">
+                    <td className="p-4 font-black text-blue-600 dark:text-blue-400">
                       ${gear.pricePerDay}
                     </td>
                     <td className="p-4">
                       <Badge
                         className={
                           gear.stock > 0
-                            ? "bg-emerald-500 text-white"
-                            : "bg-red-500 text-white"
+                            ? "bg-blue-600 font-bold text-white"
+                            : "bg-red-500 font-bold text-white"
                         }
                       >
                         {gear.stock} units

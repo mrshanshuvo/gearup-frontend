@@ -93,7 +93,7 @@ function BrowseGearContent() {
         <aside className="h-fit space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between border-b border-slate-200 pb-4 dark:border-slate-800">
             <h2 className="flex items-center gap-2 text-lg font-bold">
-              <SlidersHorizontal className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />{" "}
+              <SlidersHorizontal className="h-5 w-5 text-primary" />{" "}
               Filters
             </h2>
             <Button
@@ -173,13 +173,13 @@ function BrowseGearContent() {
               type="checkbox"
               checked={availableOnly}
               onChange={(e) => setAvailableOnly(e.target.checked)}
-              className="h-4 w-4 rounded accent-emerald-600"
+              className="h-4 w-4 rounded accent-rose-600"
             />
           </div>
 
           <Button
             onClick={applyFilters}
-            className="w-full bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-600"
+            className="w-full bg-primary text-primary-foreground hover:bg-rose-700 font-bold"
           >
             Apply Filters
           </Button>

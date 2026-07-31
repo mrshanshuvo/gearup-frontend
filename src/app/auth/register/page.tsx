@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import Image from "next/image";
 import { Eye, EyeOff, Loader2, Dumbbell, UserCheck, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,8 +47,15 @@ export default function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12 sm:px-6 lg:px-8 dark:bg-slate-950">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="space-y-2 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950">
-            <Dumbbell className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+          <div className="mx-auto flex h-14 w-auto items-center justify-center">
+            <Image
+              src="/main_logo.svg"
+              alt="GearUp Logo"
+              width={160}
+              height={50}
+              className="h-12 w-auto object-contain"
+              priority
+            />
           </div>
           <CardTitle className="text-2xl font-bold tracking-tight">
             Create a GearUp Account
@@ -152,7 +160,7 @@ export default function RegisterPage() {
           <CardFooter className="flex flex-col space-y-4">
             <Button
               type="submit"
-              className="w-full bg-emerald-600 text-white hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-500"
+              className="w-full bg-primary font-bold text-primary-foreground hover:bg-rose-700"
               disabled={isPending}
             >
               {isPending ? (
@@ -169,7 +177,7 @@ export default function RegisterPage() {
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="font-medium text-emerald-600 hover:underline dark:text-emerald-400"
+                className="font-bold text-primary hover:underline"
               >
                 Sign In
               </Link>

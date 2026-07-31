@@ -104,7 +104,7 @@ export default function CategoryManagementPage() {
       <Card className="border-slate-200 dark:border-slate-800">
         <CardContent className="space-y-4 p-6">
           <h2 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-slate-100">
-            <PlusCircle className="h-4 w-4 text-emerald-600" /> Create New
+            <PlusCircle className="h-4 w-4 text-blue-600" /> Create New
             Category
           </h2>
 
@@ -132,7 +132,7 @@ export default function CategoryManagementPage() {
             <Button
               type="submit"
               disabled={createCategory.isPending}
-              className="shrink-0 bg-emerald-600 font-bold text-white hover:bg-emerald-700"
+              className="shrink-0 bg-blue-600 font-bold text-white hover:bg-blue-700"
             >
               {createCategory.isPending ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -147,7 +147,7 @@ export default function CategoryManagementPage() {
       {/* Category List Table */}
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       ) : categories.length === 0 ? (
         <div className="rounded-2xl border border-slate-200 bg-white py-12 text-center dark:border-slate-800 dark:bg-slate-900">
@@ -207,7 +207,7 @@ export default function CategoryManagementPage() {
                               size="sm"
                               onClick={() => handleSaveEdit(cat.id)}
                               disabled={updateCategory.isPending}
-                              className="h-8 bg-emerald-600 text-white"
+                              className="h-8 bg-blue-600 text-white hover:bg-blue-700"
                             >
                               <Save className="h-3.5 w-3.5" />
                             </Button>

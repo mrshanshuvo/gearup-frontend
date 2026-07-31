@@ -31,12 +31,12 @@ export default function HomePage() {
         <div className="relative z-10 mx-auto max-w-4xl text-center">
           <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl">
             Rent Sports & Outdoor Gear <br />
-            <span className="text-blue-400">
+            <span className="text-rose-400">
               Instantly & Effortlessly
             </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-emerald-100/90 sm:text-xl">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-rose-100/90 sm:text-xl">
             Browse top-quality outdoor, camping, and athletic equipment from
             trusted providers near you.
           </p>
@@ -44,7 +44,7 @@ export default function HomePage() {
           <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
             <Button
               size="lg"
-              className="bg-white px-8 font-bold text-emerald-800 shadow-lg shadow-black/20 hover:bg-emerald-50"
+              className="bg-primary px-8 font-bold text-primary-foreground shadow-lg shadow-rose-500/20 hover:bg-rose-700"
               onClick={() => (window.location.href = "/gear")}
             >
               Browse Gear Inventory{" "}
@@ -73,7 +73,7 @@ export default function HomePage() {
               <Link
                 key={cat.id}
                 href={`/gear?categoryId=${cat.id}`}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium whitespace-nowrap text-slate-700 shadow-sm transition-all hover:border-emerald-500 hover:text-emerald-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:text-emerald-400"
+                className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium whitespace-nowrap text-slate-700 shadow-sm transition-all hover:border-rose-500 hover:text-rose-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300 dark:hover:text-rose-400"
               >
                 {cat.name}
               </Link>
@@ -96,7 +96,7 @@ export default function HomePage() {
 
           <Button
             variant="ghost"
-            className="text-emerald-600 dark:text-emerald-400"
+            className="text-primary hover:text-rose-700 font-bold"
             onClick={() => (window.location.href = "/gear")}
           >
             View All <ArrowRight className="ml-1 inline h-4 w-4" />
@@ -137,7 +137,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400">
                 <Search className="h-6 w-6" />
               </div>
               <h3 className="text-lg font-bold">1. Browse & Select</h3>
@@ -148,7 +148,7 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400">
                 <CalendarCheck className="h-6 w-6" />
               </div>
               <h3 className="text-lg font-bold">2. Book Rental Dates</h3>
@@ -159,7 +159,7 @@ export default function HomePage() {
             </div>
 
             <div className="space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400">
                 <ShieldCheck className="h-6 w-6" />
               </div>
               <h3 className="text-lg font-bold">3. Pay & Pick Up</h3>

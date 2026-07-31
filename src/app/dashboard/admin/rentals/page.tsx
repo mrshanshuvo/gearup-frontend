@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ClipboardList, Loader2, Calendar } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
 import { useAllRentalsAdmin } from "@/hooks/useAdminGear";
 
 export default function AllRentalsAdminPage() {
@@ -69,11 +70,11 @@ export default function AllRentalsAdminPage() {
           </p>
         </div>
 
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-right dark:border-emerald-900 dark:bg-emerald-950/40">
-          <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
+        <div className="rounded-xl border border-blue-200 bg-blue-50 px-4 py-2 text-right dark:border-blue-900 dark:bg-blue-950/40">
+          <p className="text-[11px] font-semibold text-blue-700 dark:text-blue-400">
             Total Filtered Value
           </p>
-          <p className="text-xl font-black text-emerald-600 dark:text-emerald-300">
+          <p className="text-xl font-black text-blue-600 dark:text-blue-300">
             ${totalFilteredValue}
           </p>
         </div>
@@ -85,9 +86,9 @@ export default function AllRentalsAdminPage() {
           <button
             key={tab.value}
             onClick={() => setStatusFilter(tab.value)}
-            className={`rounded-full px-4 py-2 text-xs font-semibold whitespace-nowrap transition-all ${
+            className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition-all ${
               statusFilter === tab.value
-                ? "bg-amber-500 text-white shadow-sm"
+                ? "bg-blue-600 text-white shadow-sm"
                 : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400"
             }`}
           >
@@ -99,7 +100,7 @@ export default function AllRentalsAdminPage() {
       {/* Rentals Table */}
       {isLoading ? (
         <div className="flex justify-center py-16">
-          <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
+          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
         </div>
       ) : filteredRentals.length === 0 ? (
         <div className="rounded-2xl border border-slate-200 bg-white py-16 text-center dark:border-slate-800 dark:bg-slate-900">
@@ -137,16 +138,16 @@ export default function AllRentalsAdminPage() {
                     <td className="p-4 text-slate-700 dark:text-slate-300">
                       {order.gearItem?.name}
                     </td>
-                    <td className="flex items-center gap-1 p-4 text-xs text-slate-500">
-                      <Calendar className="h-3.5 w-3.5 text-amber-500" />
+                    <td className="flex items-center gap-1 p-4 text-xs text-slate-500 font-medium">
+                      <Calendar className="h-3.5 w-3.5 text-blue-600" />
                       {new Date(order.startDate).toLocaleDateString()} -{" "}
                       {new Date(order.endDate).toLocaleDateString()}
                     </td>
-                    <td className="p-4 font-extrabold text-emerald-600 dark:text-emerald-400">
+                    <td className="p-4 font-black text-blue-600 dark:text-blue-400">
                       ${order.totalCost}
                     </td>
                     <td className="p-4 text-right">
-                      {getStatusBadge(order.status)}
+                      <RentalStatusBadge status={order.status} />
                     </td>
                   </tr>
                 ))}
