@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Shield, Loader2, CheckCircle2, Camera, ImageOff } from "lucide-react";
+import { Shield, Loader2, CheckCircle2, Camera } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,6 @@ export default function ProfileForm() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
-
   const [profileImageUrl, setProfileImageUrl] = useState<string>("");
 
   const {
@@ -54,7 +53,7 @@ export default function ProfileForm() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Preview immediately
+    // Show instant local preview while uploading
     const previewUrl = URL.createObjectURL(file);
     setAvatarPreview(previewUrl);
 
@@ -62,7 +61,8 @@ export default function ProfileForm() {
       const result = await uploadImage.mutateAsync(file);
       setValue("profile_image", result.data.url);
       setProfileImageUrl(result.data.url);
-      toast.success("Image uploaded successfully!");
+      setAvatarPreview(null); // use the real CDN URL now
+      toast.success("Photo updated!");
     } catch {
       setAvatarPreview(null);
     }
@@ -71,10 +71,10 @@ export default function ProfileForm() {
   const onSubmit = async (data: UpdateProfileInput) => {
     try {
       await updateProfile.mutateAsync(data);
-      toast.success("Profile updated successfully!");
+      toast.success("Profile saved successfully!");
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
-      toast.error(error.response?.data?.message || "Failed to update profile");
+      toast.error(error.response?.data?.message || "Failed to save profile");
     }
   };
 
@@ -90,102 +90,114 @@ export default function ProfileForm() {
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-          My Profile &amp; Preferences
+          My Profile
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">
-          Manage your personal information and public display options.
+          Manage your personal information and display options.
         </p>
       </div>
 
       <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-        {/* Left Column: Avatar Card */}
+        {/* Left column — avatar card */}
         <Card className="h-fit border-slate-200 dark:border-slate-800">
-          <CardContent className="space-y-4 p-6 text-center">
-            {/* Avatar with click-to-upload */}
-            <div className="group relative mx-auto h-24 w-24">
-              {displayImage ? (
-                <Image
-                  src={displayImage}
-                  alt="Profile avatar"
-                  width={96}
-                  height={96}
-                  className="h-24 w-24 rounded-full object-cover shadow-md ring-2 ring-blue-100 dark:ring-blue-900"
-                />
-              ) : (
-                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-blue-100 text-4xl font-bold text-blue-600 shadow-inner dark:bg-blue-950">
-                  {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
-                </div>
-              )}
-
-              {/* Upload overlay */}
+          <CardContent className="flex flex-col items-center space-y-4 p-6">
+            {/* Clickable avatar */}
+            <div className="group relative">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadImage.isPending}
-                className="absolute inset-0 flex cursor-pointer flex-col items-center justify-center rounded-full bg-black/50 opacity-0 transition-opacity group-hover:opacity-100"
+                className="relative block h-28 w-28 cursor-pointer rounded-full focus:outline-none focus:ring-4 focus:ring-blue-500/30"
+                title="Change profile photo"
               >
-                {uploadImage.isPending ? (
-                  <Loader2 className="h-5 w-5 animate-spin text-white" />
+                {displayImage ? (
+                  <Image
+                    src={displayImage}
+                    alt="Profile photo"
+                    width={112}
+                    height={112}
+                    className="h-28 w-28 rounded-full object-cover ring-4 ring-slate-100 dark:ring-slate-800"
+                  />
                 ) : (
-                  <>
-                    <Camera className="h-5 w-5 text-white" />
-                    <span className="mt-1 text-[10px] font-semibold text-white">
-                      Change
-                    </span>
-                  </>
+                  <span className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-4xl font-bold text-white ring-4 ring-slate-100 dark:ring-slate-800">
+                    {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                  </span>
                 )}
+
+                {/* Hover overlay */}
+                <span className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 opacity-0 transition-all duration-200 group-hover:opacity-100">
+                  {uploadImage.isPending ? (
+                    <Loader2 className="h-6 w-6 animate-spin text-white" />
+                  ) : (
+                    <>
+                      <Camera className="h-6 w-6 text-white" />
+                      <span className="mt-1 text-[11px] font-semibold text-white">
+                        Change
+                      </span>
+                    </>
+                  )}
+                </span>
               </button>
 
+              {/* Hidden file input */}
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp,image/gif"
                 className="hidden"
                 onChange={handleFileChange}
               />
             </div>
 
-            <div>
-              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+            <div className="text-center">
+              <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
                 {user?.name}
-              </h2>
+              </p>
               <p className="text-xs text-slate-500">{user?.email}</p>
             </div>
 
             <Badge
               variant="outline"
-              className="border-blue-600 font-bold text-blue-600"
+              className="border-blue-500 text-blue-600 dark:border-blue-400 dark:text-blue-400"
             >
-              <Shield className="mr-1 h-3 w-3" /> {user?.role} Account
+              <Shield className="mr-1 h-3 w-3" />
+              {user?.role}
             </Badge>
 
             {user?.bio && (
-              <p className="border-t border-slate-100 pt-3 text-xs italic text-slate-600 dark:border-slate-800 dark:text-slate-400">
+              <p className="border-t border-slate-100 pt-3 text-center text-xs italic text-slate-500 dark:border-slate-800">
                 &quot;{user.bio}&quot;
               </p>
             )}
 
             <p className="text-[11px] text-slate-400">
-              Click avatar to upload image
+              Click photo to change
             </p>
           </CardContent>
         </Card>
 
-        {/* Right Column: Edit Profile Form */}
+        {/* Right column — edit form */}
         <div className="md:col-span-2">
           <Card className="border-slate-200 dark:border-slate-800">
-            <CardContent className="space-y-6 p-6">
-              <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
-                Edit Profile Details
+            <CardContent className="p-6">
+              <h2 className="mb-6 text-base font-bold text-slate-900 dark:text-slate-100">
+                Edit Details
               </h2>
 
-              <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+              <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                {/* profile_image is tracked silently — no URL field shown */}
+                <input type="hidden" {...register("profile_image")} />
+
                 {/* Full Name */}
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                     Full Name
                   </label>
-                  <Input {...register("name")} placeholder="Your Full Name" />
+                  <Input
+                    {...register("name")}
+                    placeholder="Your full name"
+                    className={errors.name ? "border-red-500" : ""}
+                  />
                   {errors.name && (
                     <p className="text-xs text-red-500">
                       {errors.name.message}
@@ -193,82 +205,59 @@ export default function ProfileForm() {
                   )}
                 </div>
 
-                {/* Email (Read only) */}
-                <div className="space-y-1">
+                {/* Email — read-only */}
+                <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    Email Address (Read-only)
+                    Email Address
                   </label>
                   <Input
                     value={user?.email || ""}
                     disabled
-                    className="bg-slate-100 dark:bg-slate-900"
+                    className="cursor-not-allowed bg-slate-50 text-slate-500 dark:bg-slate-900"
                   />
-                </div>
-
-                {/* Profile Image URL + Cloudinary Upload */}
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    Profile Image
-                  </label>
-                  <div className="flex gap-2">
-                    <Input
-                      {...register("profile_image")}
-                      placeholder="https://... or upload via avatar"
-                      className="flex-1"
-                    />
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={uploadImage.isPending}
-                      className="shrink-0"
-                    >
-                      {uploadImage.isPending ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <ImageOff className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                  {errors.profile_image && (
-                    <p className="text-xs text-red-500">
-                      {errors.profile_image.message}
-                    </p>
-                  )}
+                  <p className="text-[11px] text-slate-400">
+                    Email cannot be changed
+                  </p>
                 </div>
 
                 {/* Bio */}
-                <div className="space-y-1">
+                <div className="space-y-1.5">
                   <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    Bio / Short Intro (Optional)
+                    Bio
+                    <span className="ml-1 font-normal text-slate-400">
+                      (optional)
+                    </span>
                   </label>
                   <textarea
                     {...register("bio")}
                     rows={4}
                     placeholder="Tell others a bit about yourself..."
-                    className="w-full rounded-md border border-slate-200 p-3 text-sm outline-none focus:ring-2 focus:ring-blue-600 dark:border-slate-800 dark:bg-slate-950"
+                    className="w-full resize-none rounded-md border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-950"
                   />
                   {errors.bio && (
                     <p className="text-xs text-red-500">{errors.bio.message}</p>
                   )}
                 </div>
 
-                <Button
-                  type="submit"
-                  disabled={updateProfile.isPending || uploadImage.isPending}
-                  className="bg-blue-600 px-6 font-bold text-white hover:bg-blue-700"
-                >
-                  {updateProfile.isPending ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle2 className="mr-2 h-4 w-4" /> Save Profile
-                    </>
-                  )}
-                </Button>
+                <div className="flex justify-end pt-2">
+                  <Button
+                    type="submit"
+                    disabled={updateProfile.isPending || uploadImage.isPending}
+                    className="bg-blue-600 px-8 font-semibold text-white hover:bg-blue-700"
+                  >
+                    {updateProfile.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <CheckCircle2 className="mr-2 h-4 w-4" />
+                        Save Changes
+                      </>
+                    )}
+                  </Button>
+                </div>
               </form>
             </CardContent>
           </Card>
