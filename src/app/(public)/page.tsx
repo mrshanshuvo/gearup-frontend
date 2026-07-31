@@ -38,7 +38,7 @@ export default function HomePage() {
             priority
             className="object-cover object-center filter brightness-90"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-slate-950/40" />
+          <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/90 to-slate-950/40" />
         </div>
 
         <div className="relative z-10 mx-auto max-w-7xl">
@@ -98,7 +98,7 @@ export default function HomePage() {
 
             {/* Right Photography Gallery Showcase */}
             <div className="relative lg:col-span-5">
-              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-3xl border border-white/20 shadow-2xl shadow-rose-500/10">
+              <div className="relative aspect-4/5 w-full overflow-hidden rounded-3xl border border-white/20 shadow-2xl shadow-rose-500/10">
                 <Image
                   src="/hero/munbaik-cycling-clothing-F4aMcFi8Jqk-unsplash.jpg"
                   alt="Outdoor Adventure Gear"
@@ -106,7 +106,7 @@ export default function HomePage() {
                   className="object-cover"
                   priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-transparent to-transparent" />
                 
                 {/* Floating Gear Card Preview */}
                 <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/20 bg-slate-900/80 p-4 backdrop-blur-md text-left">

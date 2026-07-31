@@ -273,7 +273,7 @@ export default function GearDetailPage({
               <Button
                 onClick={handleRentNow}
                 disabled={!isAvailable || rentalDays <= 0 || isSubmitting}
-                className="w-full bg-primary py-6 text-base font-bold text-primary-foreground shadow-lg hover:bg-rose-700 font-bold"
+                className="w-full bg-primary py-6 text-base font-bold text-primary-foreground shadow-lg hover:bg-rose-700"
               >
                 {isSubmitting ? (
                   <>

@@ -232,7 +232,7 @@ export function Navbar() {
             <DropdownMenu>
               <DropdownMenuTrigger className="border-border hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium outline-none">
                 {getRoleIcon()}
-                <span className="max-w-[120px] truncate text-sm font-bold">
+                <span className="max-w-30 truncate text-sm font-bold">
                   {user.name}
                 </span>
                 <Badge className={getRoleBadgeColor()}>{user.role}</Badge>
