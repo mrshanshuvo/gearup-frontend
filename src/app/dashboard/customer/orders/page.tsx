@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Loader2, Calendar, ShoppingBag, ArrowRight } from "lucide-react";
+import { Loader2, Calendar, ShoppingBag, ArrowRight, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
@@ -152,17 +152,29 @@ export default function MyOrdersPage() {
 
                   <div className="flex items-center gap-2">
                     {order.status === "PLACED" && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled={cancelRental.isPending}
-                        onClick={() => handleCancelOrder(order.id)}
-                        className="cursor-pointer border-red-200 font-bold text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/50 dark:hover:bg-red-950/50"
-                      >
-                        Cancel Order
-                      </Button>
+                      <>
+                        <Button
+                          size="sm"
+                          onClick={() =>
+                            (window.location.href = `/dashboard/customer/orders/${order.id}`)
+                          }
+                          className="bg-blue-600 font-bold text-white shadow-sm hover:bg-blue-700 cursor-pointer"
+                        >
+                          <CreditCard className="mr-1.5 h-3.5 w-3.5" /> Pay Now
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={cancelRental.isPending}
+                          onClick={() => handleCancelOrder(order.id)}
+                          className="cursor-pointer border-red-200 font-bold text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/50 dark:hover:bg-red-950/50"
+                        >
+                          Cancel Order
+                        </Button>
+                      </>
                     )}
                     <Button
+                      size="sm"
                       onClick={() =>
                         (window.location.href = `/dashboard/customer/orders/${order.id}`)
                       }
