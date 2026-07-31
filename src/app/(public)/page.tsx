@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -9,8 +9,24 @@ import {
   CalendarCheck,
   ShieldCheck,
   Sparkles,
+  Star,
+  CheckCircle2,
+  HelpCircle,
+  MessageSquareQuote,
+  TrendingUp,
+  Award,
+  Users,
+  Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionTrigger,
+  AccordionContent,
+} from "@/components/ui/accordion";
 import { GearCard } from "@/components/gear/GearCard";
 import { GearSkeleton } from "@/components/gear/GearSkeleton";
 import { useCategories, useGearList } from "@/hooks/useGear";
@@ -35,6 +51,7 @@ export default function HomePage() {
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   React.useEffect(() => {
     const timer = setInterval(() => {
@@ -43,9 +60,63 @@ export default function HomePage() {
     return () => clearInterval(timer);
   }, [heroImages.length]);
 
+  const faqs = [
+    {
+      q: "How does renting sports & outdoor gear work on GearUp?",
+      a: "Simply browse available equipment by category or location, pick your rental start and end dates, and complete secure checkout via Stripe. Once confirmed, coordinate pickup directly with the verified provider.",
+    },
+    {
+      q: "What if equipment is damaged or returned late?",
+      a: "All rentals are protected under our Provider Safety Policy. Providers inspect equipment at pickup and return. Minor wear-and-tear is covered, while significant damage or late returns are resolved through secure deposit claims.",
+    },
+    {
+      q: "Is there a security deposit required for high-value gear?",
+      a: "Certain premium equipment (such as pro mountain bikes or specialized camping kits) may hold a temporary security deposit via Stripe. The hold is fully released within 24 hours of safe item return.",
+    },
+    {
+      q: "How do I become a Gear Provider and earn money?",
+      a: "Click 'Become a Gear Provider' to register a free Provider account. You can create listings for your unused sports equipment in under 2 minutes, set your custom daily rates, and manage bookings from your Provider Dashboard.",
+    },
+    {
+      q: "What payment methods are supported?",
+      a: "We support all major credit/debit cards, Apple Pay, and Google Pay through our PCI-DSS compliant Stripe checkout integration.",
+    },
+    {
+      q: "Can I cancel or reschedule my rental booking?",
+      a: "Yes! Full refunds are available for cancellations made at least 48 hours before the scheduled rental start date directly from your Customer Orders Dashboard.",
+    },
+  ];
+
+  const testimonials = [
+    {
+      name: "Alex R.",
+      role: "Outdoor Enthusiast",
+      city: "Denver, CO",
+      comment:
+        "Rented top-tier camping gear for a weekend trip to Rocky Mountain NP. Saved over $600 compared to buying new equipment!",
+      stars: 5,
+    },
+    {
+      name: "Sarah M.",
+      role: "Gear Provider",
+      city: "Seattle, WA",
+      comment:
+        "Listing my unused kayaks and mountain bikes has earned me $1,200/month. The Provider Dashboard makes managing orders effortless.",
+      stars: 5,
+    },
+    {
+      name: "David K.",
+      role: "Frequent Cyclist",
+      city: "Austin, TX",
+      comment:
+        "Fast pickup, verified clean equipment, and seamless Stripe checkout. GearUp is my go-to for weekend adventure trips.",
+      stars: 5,
+    },
+  ];
+
   return (
     <div className="space-y-16 pb-16">
-      {/* Hero Section with Centered Layout & Background Image Carousel */}
+      {/* 1. HERO SECTION */}
       <section className="relative overflow-hidden bg-slate-950 px-4 py-28 text-white sm:px-6 lg:px-8">
         {/* Background Image Carousel Layer */}
         {heroImages.map((src, idx) => (
@@ -129,7 +200,52 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Categories Filter Pills Section */}
+      {/* 2. STATS & TRUST METRICS BAR (NEW) */}
+      <section className="-mt-16 relative z-20 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 gap-4 rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-xl backdrop-blur-md md:grid-cols-4 dark:border-slate-800 dark:bg-slate-900/95">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400">
+              <Award className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xl font-extrabold text-slate-900 dark:text-white">500+</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Verified Equipment</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
+              <Users className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xl font-extrabold text-slate-900 dark:text-white">2,400+</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Happy Adventure Renters</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
+              <TrendingUp className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xl font-extrabold text-slate-900 dark:text-white">99.2%</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">5-Star Review Rating</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-100 text-amber-600 dark:bg-amber-950 dark:text-amber-400">
+              <Clock className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-xl font-extrabold text-slate-900 dark:text-white">Instant</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">Stripe Protected Checkout</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. CATEGORIES FILTER PILLS */}
       {categories.length > 0 && (
         <section className="mx-auto max-w-7xl space-y-4 px-4 sm:px-6 lg:px-8">
           <h2 className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
@@ -149,7 +265,7 @@ export default function HomePage() {
         </section>
       )}
 
-      {/* Featured Gear Section */}
+      {/* 4. FEATURED GEAR CATALOG */}
       <section className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between">
           <div>
@@ -163,7 +279,7 @@ export default function HomePage() {
 
           <Button
             variant="ghost"
-            className="text-primary font-bold hover:text-rose-700"
+            className="font-bold text-primary hover:text-rose-700"
             onClick={() => (window.location.href = "/gear")}
           >
             View All <ArrowRight className="ml-1 inline h-4 w-4" />
@@ -189,7 +305,50 @@ export default function HomePage() {
         )}
       </section>
 
-      {/* How It Works Section */}
+      {/* 5. PROVIDER SPLIT-SCREEN CTA (NEW) */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 items-center gap-12 overflow-hidden rounded-3xl border border-rose-100 bg-rose-50/70 p-8 lg:grid-cols-12 lg:p-12 dark:border-rose-950/50 dark:bg-rose-950/20">
+          <div className="space-y-6 lg:col-span-7">
+            <Badge className="bg-rose-600 text-white font-bold">Earn Extra Income</Badge>
+            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
+              Have Unused Sports Gear? <br />
+              <span className="text-rose-600 dark:text-rose-400">List it & start earning today.</span>
+            </h2>
+            <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+              Turn your bikes, tents, kayaks, and athletic equipment into passive income. Set custom rates, approve booking requests, and get paid securely.
+            </p>
+            <ul className="space-y-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-rose-600 dark:text-rose-400" /> Keep 100% control over rental dates & prices
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-rose-600 dark:text-rose-400" /> Verified customer profiles & secure Stripe deposits
+              </li>
+              <li className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-rose-600 dark:text-rose-400" /> Dedicated Provider Dashboard analytics
+              </li>
+            </ul>
+            <Button
+              size="lg"
+              className="bg-rose-600 font-bold text-white shadow-lg hover:bg-rose-700"
+              onClick={() => (window.location.href = "/auth/register?role=Provider")}
+            >
+              Start Listing Free <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+
+          <div className="relative aspect-4/3 w-full overflow-hidden rounded-2xl border border-white/20 shadow-xl lg:col-span-5">
+            <Image
+              src="/hero/kari-ham-ToHKwi1KXtc-unsplash.jpg"
+              alt="Equipment Provider"
+              fill
+              className="object-cover"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* 6. HOW IT WORKS SECTION */}
       <section className="border-y border-slate-200 bg-slate-100 px-4 py-16 sm:px-6 lg:px-8 dark:border-slate-800 dark:bg-slate-900/50">
         <div className="mx-auto max-w-7xl space-y-12 text-center">
           <div className="space-y-2">
@@ -235,6 +394,122 @@ export default function HomePage() {
                 pick up your gear!
               </p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. TESTIMONIALS & REVIEWS SECTION (NEW) */}
+      <section className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
+        <div className="space-y-2 text-center">
+          <Badge variant="outline" className="text-xs font-bold text-rose-600 border-rose-200">
+            <MessageSquareQuote className="mr-1 h-3.5 w-3.5" /> Renter Feedback
+          </Badge>
+          <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+            Loved by Outdoor Adventurers
+          </h2>
+          <p className="mx-auto max-w-xl text-sm text-slate-500 dark:text-slate-400">
+            Here is what verified customers and equipment providers have to say about GearUp.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {testimonials.map((t, idx) => (
+            <Card key={idx} className="border-slate-200 dark:border-slate-800 shadow-sm">
+              <CardContent className="space-y-4 p-6">
+                <div className="flex items-center gap-1 text-amber-400">
+                  {Array.from({ length: t.stars }).map((_, i) => (
+                    <Star key={i} className="h-4 w-4 fill-amber-400" />
+                  ))}
+                </div>
+                <p className="text-xs italic leading-relaxed text-slate-600 dark:text-slate-300">
+                  &ldquo;{t.comment}&rdquo;
+                </p>
+                <div className="flex items-center justify-between border-t border-slate-100 pt-3 dark:border-slate-800">
+                  <div>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">{t.name}</p>
+                    <p className="text-[11px] text-slate-400">{t.city}</p>
+                  </div>
+                  <Badge variant="secondary" className="text-[10px]">
+                    {t.role}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      {/* 8. FAQ ACCORDION SECTION (NEW) */}
+      <section className="border-t border-slate-200 bg-slate-50/80 px-4 py-16 sm:px-6 lg:px-8 dark:border-slate-800 dark:bg-slate-900/40">
+        <div className="mx-auto max-w-3xl space-y-8">
+          <div className="space-y-2 text-center">
+            <Badge variant="outline" className="text-xs font-bold text-primary border-rose-200">
+              <HelpCircle className="mr-1 h-3.5 w-3.5" /> FAQs
+            </Badge>
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
+              Frequently Asked Questions
+            </h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Everything you need to know about renting and listing equipment on GearUp.
+            </p>
+          </div>
+
+          <Accordion>
+            {faqs.map((faq, idx) => {
+              const isOpen = openFaq === idx;
+              return (
+                <AccordionItem key={idx}>
+                  <AccordionTrigger
+                    isOpen={isOpen}
+                    onToggle={() => setOpenFaq(isOpen ? null : idx)}
+                  >
+                    {faq.q}
+                  </AccordionTrigger>
+                  <AccordionContent isOpen={isOpen}>
+                    {faq.a}
+                  </AccordionContent>
+                </AccordionItem>
+              );
+            })}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* 9. BOTTOM CTA BANNER (NEW) */}
+      <section className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-slate-950 px-6 py-16 text-center text-white shadow-2xl">
+        <div className="absolute inset-0 z-0 opacity-30">
+          <Image
+            src="/hero/pranab-debnath-cp8D7oWxsOE-unsplash.jpg"
+            alt="GearUp Adventure"
+            fill
+            className="object-cover"
+          />
+          <div className="absolute inset-0 bg-slate-950/80" />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-3xl space-y-6">
+          <h2 className="text-3xl font-extrabold tracking-tight sm:text-5xl">
+            Ready to Start Your Next Adventure?
+          </h2>
+          <p className="mx-auto max-w-xl text-base text-slate-300">
+            Join thousands of outdoor enthusiasts renting top-quality sports equipment at fractions of retail price.
+          </p>
+          <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+            <Button
+              size="lg"
+              className="bg-rose-600 px-8 font-bold text-white shadow-lg hover:bg-rose-700"
+              onClick={() => (window.location.href = "/gear")}
+            >
+              Browse Gear Catalog <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white/30 bg-white/10 px-8 font-bold text-white backdrop-blur-md hover:bg-white hover:text-slate-900"
+              onClick={() => (window.location.href = "/auth/register?role=Provider")}
+            >
+              List Your Gear Free
+            </Button>
           </div>
         </div>
       </section>
