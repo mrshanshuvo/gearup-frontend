@@ -107,7 +107,7 @@ export default function ProfileForm() {
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadImage.isPending}
-                className="relative block h-28 w-28 cursor-pointer rounded-full focus:outline-none focus:ring-4 focus:ring-blue-500/30"
+                className="relative block h-28 w-28 cursor-pointer rounded-full focus:ring-4 focus:ring-blue-500/30 focus:outline-none disabled:cursor-not-allowed"
                 title="Change profile photo"
               >
                 {displayImage ? (
@@ -116,27 +116,50 @@ export default function ProfileForm() {
                     alt="Profile photo"
                     width={112}
                     height={112}
-                    className="h-28 w-28 rounded-full object-cover ring-4 ring-slate-100 dark:ring-slate-800"
+                    className={`h-28 w-28 rounded-full object-cover ring-4 ring-slate-100 transition-opacity duration-300 dark:ring-slate-800 ${uploadImage.isPending ? "opacity-40" : "opacity-100"}`}
                   />
                 ) : (
-                  <span className="flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-4xl font-bold text-white ring-4 ring-slate-100 dark:ring-slate-800">
+                  <span className={`flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-4xl font-bold text-white ring-4 ring-slate-100 transition-opacity duration-300 dark:ring-slate-800 ${uploadImage.isPending ? "opacity-40" : "opacity-100"}`}>
                     {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
                   </span>
                 )}
 
-                {/* Hover overlay */}
-                <span className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 opacity-0 transition-all duration-200 group-hover:opacity-100">
-                  {uploadImage.isPending ? (
-                    <Loader2 className="h-6 w-6 animate-spin text-white" />
-                  ) : (
-                    <>
-                      <Camera className="h-6 w-6 text-white" />
-                      <span className="mt-1 text-[11px] font-semibold text-white">
-                        Change
-                      </span>
-                    </>
-                  )}
-                </span>
+                {/* Always-visible loading overlay when uploading */}
+                {uploadImage.isPending && (
+                  <span className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/40">
+                    {/* Spinning SVG ring */}
+                    <svg
+                      className="h-10 w-10 animate-spin text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                      />
+                      <path
+                        className="opacity-90"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                      />
+                    </svg>
+                  </span>
+                )}
+
+                {/* Hover overlay — only when NOT uploading */}
+                {!uploadImage.isPending && (
+                  <span className="absolute inset-0 flex flex-col items-center justify-center rounded-full bg-black/50 opacity-0 transition-all duration-200 group-hover:opacity-100">
+                    <Camera className="h-6 w-6 text-white" />
+                    <span className="mt-1 text-[11px] font-semibold text-white">
+                      Change
+                    </span>
+                  </span>
+                )}
               </button>
 
               {/* Hidden file input */}
@@ -148,6 +171,14 @@ export default function ProfileForm() {
                 onChange={handleFileChange}
               />
             </div>
+
+            {/* Upload status text */}
+            {uploadImage.isPending && (
+              <p className="flex items-center gap-1.5 text-xs font-medium text-blue-600 dark:text-blue-400">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                Uploading photo...
+              </p>
+            )}
 
             <div className="text-center">
               <p className="text-base font-semibold text-slate-900 dark:text-slate-100">
@@ -165,14 +196,12 @@ export default function ProfileForm() {
             </Badge>
 
             {user?.bio && (
-              <p className="border-t border-slate-100 pt-3 text-center text-xs italic text-slate-500 dark:border-slate-800">
+              <p className="border-t border-slate-100 pt-3 text-center text-xs text-slate-500 italic dark:border-slate-800">
                 &quot;{user.bio}&quot;
               </p>
             )}
 
-            <p className="text-[11px] text-slate-400">
-              Click photo to change
-            </p>
+            <p className="text-[11px] text-slate-400">Click photo to change</p>
           </CardContent>
         </Card>
 
@@ -232,7 +261,7 @@ export default function ProfileForm() {
                     {...register("bio")}
                     rows={4}
                     placeholder="Tell others a bit about yourself..."
-                    className="w-full resize-none rounded-md border border-slate-200 bg-transparent px-3 py-2 text-sm outline-none transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-950"
+                    className="w-full resize-none rounded-md border border-slate-200 bg-transparent px-3 py-2 text-sm transition-colors outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 dark:border-slate-700 dark:bg-slate-950"
                   />
                   {errors.bio && (
                     <p className="text-xs text-red-500">{errors.bio.message}</p>
