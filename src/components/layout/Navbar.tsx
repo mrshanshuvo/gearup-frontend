@@ -41,6 +41,21 @@ export function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const categoryTimeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+
+  const handleCategoryMouseEnter = () => {
+    if (categoryTimeoutRef.current) {
+      clearTimeout(categoryTimeoutRef.current);
+      categoryTimeoutRef.current = null;
+    }
+    setIsCategoryOpen(true);
+  };
+
+  const handleCategoryMouseLeave = () => {
+    categoryTimeoutRef.current = setTimeout(() => {
+      setIsCategoryOpen(false);
+    }, 200);
+  };
 
   const user = useAuthStore((state) => state.user);
   const logout = useLogout();
@@ -83,7 +98,7 @@ export function Navbar() {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/80 backdrop-blur-md">
+    <header className="border-border/80 bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center">
@@ -101,9 +116,9 @@ export function Navbar() {
         <nav className="hidden items-center gap-7 md:flex">
           <Link
             href="/"
-            className={`text-sm font-medium transition-colors hover:text-primary ${
+            className={`hover:text-primary text-sm font-medium transition-colors ${
               pathname === "/"
-                ? "font-bold text-primary"
+                ? "text-primary font-bold"
                 : "text-muted-foreground"
             }`}
           >
@@ -112,43 +127,55 @@ export function Navbar() {
 
           <Link
             href="/gear"
-            className={`flex items-center gap-1 text-sm font-medium transition-colors hover:text-primary ${
+            className={`hover:text-primary flex items-center gap-1 text-sm font-medium transition-colors ${
               pathname.startsWith("/gear") && !pathname.includes("categoryId")
-                ? "font-bold text-primary"
+                ? "text-primary font-bold"
                 : "text-muted-foreground"
             }`}
           >
             <ShoppingBag className="h-4 w-4" /> Browse Gear
           </Link>
 
-          {/* shadcn DropdownMenu for Categories (Hover Triggered) */}
+          {/* shadcn DropdownMenu for Categories (Hover Triggered with Intent Delay) */}
           <DropdownMenu open={isCategoryOpen} onOpenChange={setIsCategoryOpen}>
             <div
-              onMouseEnter={() => setIsCategoryOpen(true)}
-              onMouseLeave={() => setIsCategoryOpen(false)}
+              onMouseEnter={handleCategoryMouseEnter}
+              onMouseLeave={handleCategoryMouseLeave}
             >
-              <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary outline-none cursor-pointer">
-                <Tag className="h-4 w-4 text-primary" /> Categories{" "}
+              <DropdownMenuTrigger className="text-muted-foreground hover:text-primary flex cursor-pointer items-center gap-1.5 text-sm font-medium transition-colors outline-none">
+                <Tag className="text-primary h-4 w-4" /> Categories{" "}
                 <ChevronDown className="h-3.5 w-3.5 opacity-70" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
-                <DropdownMenuLabel className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                  <Sparkles className="h-3.5 w-3.5 text-primary" /> Popular Equipment
+              <DropdownMenuContent
+                align="start"
+                sideOffset={0}
+                onMouseEnter={handleCategoryMouseEnter}
+                onMouseLeave={handleCategoryMouseLeave}
+                className="w-56"
+              >
+                <DropdownMenuLabel className="text-muted-foreground flex items-center gap-1.5 text-xs">
+                  <Sparkles className="text-primary h-3.5 w-3.5" /> Popular
+                  Equipment
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {categories.length === 0 ? (
-                  <div className="p-2 text-center text-xs text-muted-foreground">
+                  <div className="text-muted-foreground p-2 text-center text-xs">
                     Loading categories...
                   </div>
                 ) : (
                   categories.map((cat) => (
                     <DropdownMenuItem
                       key={cat.id}
-                      onClick={() => (window.location.href = `/gear?categoryId=${cat.id}`)}
+                      onClick={() =>
+                        (window.location.href = `/gear?categoryId=${cat.id}`)
+                      }
                       className="flex cursor-pointer items-center justify-between font-medium"
                     >
                       <span>{cat.name}</span>
-                      <Badge variant="outline" className="text-[10px] uppercase">
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] uppercase"
+                      >
                         Gear
                       </Badge>
                     </DropdownMenuItem>
@@ -157,7 +184,7 @@ export function Navbar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => (window.location.href = "/gear")}
-                  className="flex cursor-pointer items-center justify-center font-bold text-primary"
+                  className="text-primary flex cursor-pointer items-center justify-center font-bold"
                 >
                   View All Categories →
                 </DropdownMenuItem>
@@ -168,7 +195,7 @@ export function Navbar() {
           {/* How It Works Link */}
           <Link
             href="/#how-it-works"
-            className="flex items-center gap-1 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
+            className="text-muted-foreground hover:text-primary flex items-center gap-1 text-sm font-medium transition-colors"
           >
             <HelpCircle className="h-4 w-4" /> How It Works
           </Link>
@@ -182,7 +209,7 @@ export function Navbar() {
             }
             className="flex items-center gap-1.5 rounded-full border border-rose-200 bg-rose-50 px-3 py-1 text-xs font-bold text-rose-700 transition-all hover:bg-rose-100 dark:border-rose-900/50 dark:bg-rose-950/40 dark:text-rose-300 dark:hover:bg-rose-900/50"
           >
-            <PlusCircle className="h-3.5 w-3.5 text-primary" /> List Your Gear
+            <PlusCircle className="text-primary h-3.5 w-3.5" /> List Your Gear
           </Link>
         </nav>
 
@@ -193,19 +220,19 @@ export function Navbar() {
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground rounded-full"
           >
-            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Sun className="h-5 w-5 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+            <Moon className="absolute h-5 w-5 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
             <span className="sr-only">Toggle theme</span>
           </Button>
 
           {/* User Auth state using shadcn DropdownMenu */}
           {user ? (
             <DropdownMenu>
-              <DropdownMenuTrigger className="border-border hover:bg-accent hover:text-accent-foreground flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium outline-none cursor-pointer">
+              <DropdownMenuTrigger className="border-border hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium outline-none">
                 {getRoleIcon()}
-                <span className="max-w-[120px] truncate font-bold text-sm">
+                <span className="max-w-[120px] truncate text-sm font-bold">
                   {user.name}
                 </span>
                 <Badge className={getRoleBadgeColor()}>{user.role}</Badge>
@@ -213,7 +240,7 @@ export function Navbar() {
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuLabel className="flex flex-col gap-1">
                   <span className="font-bold">{user.name}</span>
-                  <span className="truncate text-xs font-normal text-muted-foreground">
+                  <span className="text-muted-foreground truncate text-xs font-normal">
                     {user.email}
                   </span>
                 </DropdownMenuLabel>
@@ -222,7 +249,8 @@ export function Navbar() {
                   onClick={() => (window.location.href = getDashboardLink())}
                   className="flex cursor-pointer items-center gap-2 font-semibold"
                 >
-                  <LayoutDashboard className="h-4 w-4 text-primary" /> My Dashboard
+                  <LayoutDashboard className="text-primary h-4 w-4" /> My
+                  Dashboard
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
@@ -235,11 +263,14 @@ export function Navbar() {
             </DropdownMenu>
           ) : (
             <div className="flex items-center gap-2">
-              <Button variant="ghost" onClick={() => (window.location.href = "/auth/login")}>
+              <Button
+                variant="ghost"
+                onClick={() => (window.location.href = "/auth/login")}
+              >
                 Sign In
               </Button>
               <Button
-                className="bg-primary font-bold text-primary-foreground hover:bg-rose-700"
+                className="bg-primary text-primary-foreground font-bold hover:bg-rose-700"
                 onClick={() => (window.location.href = "/auth/register")}
               >
                 Get Started
@@ -254,10 +285,10 @@ export function Navbar() {
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="rounded-full text-muted-foreground"
+            className="text-muted-foreground rounded-full"
           >
-            <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Sun className="h-5 w-5 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+            <Moon className="absolute h-5 w-5 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
           </Button>
 
           <Button
@@ -265,31 +296,35 @@ export function Navbar() {
             size="icon"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
-            {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </Button>
         </div>
       </div>
 
       {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="border-b border-border bg-background px-4 pt-2 pb-6 space-y-4 md:hidden">
+        <div className="border-border bg-background space-y-4 border-b px-4 pt-2 pb-6 md:hidden">
           <nav className="flex flex-col gap-3">
             <Link
               href="/"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-1.5 text-sm font-medium hover:text-primary"
+              className="hover:text-primary px-2 py-1.5 text-sm font-medium"
             >
               Home
             </Link>
             <Link
               href="/gear"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-1.5 text-sm font-medium hover:text-primary"
+              className="hover:text-primary px-2 py-1.5 text-sm font-medium"
             >
               Browse Gear
             </Link>
-            <div className="space-y-1 pl-2 border-l-2 border-primary/30">
-              <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            <div className="border-primary/30 space-y-1 border-l-2 pl-2">
+              <p className="text-muted-foreground text-xs font-bold tracking-wider uppercase">
                 Categories
               </p>
               {categories.map((cat) => (
@@ -297,7 +332,7 @@ export function Navbar() {
                   key={cat.id}
                   href={`/gear?categoryId=${cat.id}`}
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block py-1 text-xs text-foreground hover:text-primary"
+                  className="text-foreground hover:text-primary block py-1 text-xs"
                 >
                   {cat.name}
                 </Link>
@@ -306,7 +341,7 @@ export function Navbar() {
             <Link
               href="/#how-it-works"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-2 py-1.5 text-sm font-medium hover:text-primary"
+              className="hover:text-primary px-2 py-1.5 text-sm font-medium"
             >
               How It Works
             </Link>
@@ -319,11 +354,11 @@ export function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="flex items-center gap-2 rounded-lg bg-rose-50 p-2 text-xs font-bold text-rose-700 dark:bg-rose-950/40 dark:text-rose-300"
             >
-              <PlusCircle className="h-4 w-4 text-primary" /> List Your Gear
+              <PlusCircle className="text-primary h-4 w-4" /> List Your Gear
             </Link>
           </nav>
 
-          <div className="pt-2 border-t border-border flex flex-col gap-2">
+          <div className="border-border flex flex-col gap-2 border-t pt-2">
             {user ? (
               <>
                 <Button
@@ -331,9 +366,10 @@ export function Navbar() {
                     setMobileMenuOpen(false);
                     window.location.href = getDashboardLink();
                   }}
-                  className="w-full justify-start bg-primary text-primary-foreground font-bold"
+                  className="bg-primary text-primary-foreground w-full justify-start font-bold"
                 >
-                  <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard ({user.role})
+                  <LayoutDashboard className="mr-2 h-4 w-4" /> Dashboard (
+                  {user.role})
                 </Button>
                 <Button
                   variant="outline"
@@ -341,7 +377,7 @@ export function Navbar() {
                     setMobileMenuOpen(false);
                     logout();
                   }}
-                  className="w-full justify-start text-red-600 border-red-200"
+                  className="w-full justify-start border-red-200 text-red-600"
                 >
                   <LogOut className="mr-2 h-4 w-4" /> Sign Out
                 </Button>
@@ -358,7 +394,7 @@ export function Navbar() {
                   Sign In
                 </Button>
                 <Button
-                  className="bg-primary font-bold text-primary-foreground"
+                  className="bg-primary text-primary-foreground font-bold"
                   onClick={() => {
                     setMobileMenuOpen(false);
                     window.location.href = "/auth/register";
