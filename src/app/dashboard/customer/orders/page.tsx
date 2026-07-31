@@ -2,7 +2,14 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Loader2, Calendar, ShoppingBag, ArrowRight, CreditCard } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+  Loader2,
+  Calendar,
+  ShoppingBag,
+  ArrowRight,
+  CreditCard,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
@@ -10,6 +17,7 @@ import { useCustomerRentals, useCancelRental } from "@/hooks/useRental";
 import { toast } from "sonner";
 
 export default function MyOrdersPage() {
+  const router = useRouter();
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const { data: rentalsData, isLoading } = useCustomerRentals();
   const cancelRental = useCancelRental();
@@ -156,9 +164,11 @@ export default function MyOrdersPage() {
                         <Button
                           size="sm"
                           onClick={() =>
-                            (window.location.href = `/dashboard/customer/orders/${order.id}`)
+                            router.push(
+                              `/dashboard/customer/orders/${order.id}`
+                            )
                           }
-                          className="bg-blue-600 font-bold text-white shadow-sm hover:bg-blue-700 cursor-pointer"
+                          className="cursor-pointer bg-blue-600 font-bold text-white shadow-sm hover:bg-blue-700"
                         >
                           <CreditCard className="mr-1.5 h-3.5 w-3.5" /> Pay Now
                         </Button>
@@ -176,7 +186,7 @@ export default function MyOrdersPage() {
                     <Button
                       size="sm"
                       onClick={() =>
-                        (window.location.href = `/dashboard/customer/orders/${order.id}`)
+                        router.push(`/dashboard/customer/orders/${order.id}`)
                       }
                       className="cursor-pointer bg-slate-900 font-bold text-white hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900"
                     >
