@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Package,
@@ -18,18 +18,21 @@ export default function ProviderDashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const user = useAuthStore((state) => state.user);
+  const hasHydrated = useAuthStore((state) => state._hasHydrated);
 
   React.useEffect(() => {
+    if (!hasHydrated) return;
     if (!user) {
-      router.push("/auth/login?redirect=/dashboard/provider");
+      router.push(`/auth/login?redirect=${encodeURIComponent(pathname)}`);
     } else if (user.role !== "Provider") {
       if (user.role === "Admin") router.push("/dashboard/admin");
       else router.push("/dashboard/customer");
     }
-  }, [user, router]);
+  }, [user, router, hasHydrated, pathname]);
 
-  if (!user) return null;
+  if (!hasHydrated || !user) return null;
 
   const navItems = [
     {

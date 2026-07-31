@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { LayoutDashboard, ShoppingBag, UserCircle } from "lucide-react";
 import useAuthStore from "@/stores/authStore";
 import { DashboardShell } from "@/components/layout/DashboardShell";
@@ -12,18 +12,21 @@ export default function CustomerDashboardLayout({
   children: React.ReactNode;
 }) {
   const router = useRouter();
+  const pathname = usePathname();
   const user = useAuthStore((state) => state.user);
+  const hasHydrated = useAuthStore((state) => state._hasHydrated);
 
   React.useEffect(() => {
+    if (!hasHydrated) return;
     if (!user) {
-      router.push("/auth/login?redirect=/dashboard/customer");
+      router.push(`/auth/login?redirect=${encodeURIComponent(pathname)}`);
     } else if (user.role !== "Customer") {
       if (user.role === "Admin") router.push("/dashboard/admin");
       else if (user.role === "Provider") router.push("/dashboard/provider");
     }
-  }, [user, router]);
+  }, [user, router, hasHydrated, pathname]);
 
-  if (!user) return null;
+  if (!hasHydrated || !user) return null;
 
   const navItems = [
     {
