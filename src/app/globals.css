@@ -129,7 +129,7 @@
   }
 }
 
-/* Custom Premium Sleek Scrollbar */
+/* Custom Premium Sleek Scrollbar (Royal Blue) */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -140,7 +140,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #2563eb; /* Royal Blue */
   border-radius: 9999px;
   border: 2px solid transparent;
   background-clip: padding-box;
@@ -148,19 +148,19 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #1d4ed8; /* Deep Royal Blue */
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #3b82f6;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #60a5fa;
   border: 2px solid transparent;
   background-clip: padding-box;
 }
@@ -168,9 +168,9 @@
 /* Firefox scrollbar support */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #cbd5e1 transparent;
+  scrollbar-color: #2563eb transparent;
 }
 
 .dark * {
-  scrollbar-color: #334155 transparent;
+  scrollbar-color: #3b82f6 transparent;
 }
