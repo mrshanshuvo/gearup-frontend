@@ -104,8 +104,7 @@ export default function CategoryManagementPage() {
       <Card className="border-slate-200 dark:border-slate-800">
         <CardContent className="space-y-4 p-6">
           <h2 className="flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-slate-100">
-            <PlusCircle className="h-4 w-4 text-blue-600" /> Create New
-            Category
+            <PlusCircle className="h-4 w-4 text-blue-600" /> Create New Category
           </h2>
 
           <form

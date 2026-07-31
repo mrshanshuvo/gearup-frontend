@@ -134,13 +134,13 @@ export default function HomePage() {
               alt="Sports & Outdoor Adventure"
               fill
               priority={idx === 0}
-              className="object-cover object-center filter brightness-100 transition-transform duration-7000 ease-linear"
+              className="object-cover object-center brightness-100 filter transition-transform duration-7000 ease-linear"
             />
           </div>
         ))}
 
         {/* Lighter Vignette Overlay for Crisp Text & Visible Imagery */}
-        <div className="absolute inset-0 z-1 bg-gradient-to-b from-slate-950/70 via-slate-950/50 to-slate-950/85" />
+        <div className="absolute inset-0 z-1 bg-linear-to-b from-slate-950/70 via-slate-950/50 to-slate-950/85" />
 
         {/* Centered Hero Content Container */}
         <div className="relative z-10 mx-auto max-w-4xl space-y-6 text-center">
@@ -201,15 +201,19 @@ export default function HomePage() {
       </section>
 
       {/* 2. STATS & TRUST METRICS BAR (NEW) */}
-      <section className="-mt-16 relative z-20 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <section className="relative z-20 mx-auto -mt-16 max-w-6xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 gap-4 rounded-2xl border border-slate-200 bg-white/95 p-6 shadow-xl backdrop-blur-md md:grid-cols-4 dark:border-slate-800 dark:bg-slate-900/95">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-rose-100 text-rose-600 dark:bg-rose-950 dark:text-rose-400">
               <Award className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xl font-extrabold text-slate-900 dark:text-white">500+</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Verified Equipment</p>
+              <p className="text-xl font-extrabold text-slate-900 dark:text-white">
+                500+
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Verified Equipment
+              </p>
             </div>
           </div>
 
@@ -218,8 +222,12 @@ export default function HomePage() {
               <Users className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xl font-extrabold text-slate-900 dark:text-white">2,400+</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Happy Adventure Renters</p>
+              <p className="text-xl font-extrabold text-slate-900 dark:text-white">
+                2,400+
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Happy Adventure Renters
+              </p>
             </div>
           </div>
 
@@ -228,8 +236,12 @@ export default function HomePage() {
               <TrendingUp className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xl font-extrabold text-slate-900 dark:text-white">99.2%</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">5-Star Review Rating</p>
+              <p className="text-xl font-extrabold text-slate-900 dark:text-white">
+                99.2%
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                5-Star Review Rating
+              </p>
             </div>
           </div>
 
@@ -238,8 +250,12 @@ export default function HomePage() {
               <Clock className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xl font-extrabold text-slate-900 dark:text-white">Instant</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Stripe Protected Checkout</p>
+              <p className="text-xl font-extrabold text-slate-900 dark:text-white">
+                Instant
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Stripe Protected Checkout
+              </p>
             </div>
           </div>
         </div>
@@ -279,7 +295,7 @@ export default function HomePage() {
 
           <Button
             variant="ghost"
-            className="font-bold text-primary hover:text-rose-700"
+            className="text-primary font-bold hover:text-rose-700"
             onClick={() => (window.location.href = "/gear")}
           >
             View All <ArrowRight className="ml-1 inline h-4 w-4" />
@@ -309,29 +325,40 @@ export default function HomePage() {
       <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 items-center gap-12 overflow-hidden rounded-3xl border border-rose-100 bg-rose-50/70 p-8 lg:grid-cols-12 lg:p-12 dark:border-rose-950/50 dark:bg-rose-950/20">
           <div className="space-y-6 lg:col-span-7">
-            <Badge className="bg-rose-600 text-white font-bold">Earn Extra Income</Badge>
+            <Badge className="bg-rose-600 font-bold text-white">
+              Earn Extra Income
+            </Badge>
             <h2 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
               Have Unused Sports Gear? <br />
-              <span className="text-rose-600 dark:text-rose-400">List it & start earning today.</span>
+              <span className="text-rose-600 dark:text-rose-400">
+                List it & start earning today.
+              </span>
             </h2>
             <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-              Turn your bikes, tents, kayaks, and athletic equipment into passive income. Set custom rates, approve booking requests, and get paid securely.
+              Turn your bikes, tents, kayaks, and athletic equipment into
+              passive income. Set custom rates, approve booking requests, and
+              get paid securely.
             </p>
             <ul className="space-y-2 text-xs font-semibold text-slate-700 dark:text-slate-300">
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-rose-600 dark:text-rose-400" /> Keep 100% control over rental dates & prices
+                <CheckCircle2 className="h-4 w-4 text-rose-600 dark:text-rose-400" />{" "}
+                Keep 100% control over rental dates & prices
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-rose-600 dark:text-rose-400" /> Verified customer profiles & secure Stripe deposits
+                <CheckCircle2 className="h-4 w-4 text-rose-600 dark:text-rose-400" />{" "}
+                Verified customer profiles & secure Stripe deposits
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-rose-600 dark:text-rose-400" /> Dedicated Provider Dashboard analytics
+                <CheckCircle2 className="h-4 w-4 text-rose-600 dark:text-rose-400" />{" "}
+                Dedicated Provider Dashboard analytics
               </li>
             </ul>
             <Button
               size="lg"
               className="bg-rose-600 font-bold text-white shadow-lg hover:bg-rose-700"
-              onClick={() => (window.location.href = "/auth/register?role=Provider")}
+              onClick={() =>
+                (window.location.href = "/auth/register?role=Provider")
+              }
             >
               Start Listing Free <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
@@ -401,32 +428,41 @@ export default function HomePage() {
       {/* 7. TESTIMONIALS & REVIEWS SECTION (NEW) */}
       <section className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
         <div className="space-y-2 text-center">
-          <Badge variant="outline" className="text-xs font-bold text-rose-600 border-rose-200">
+          <Badge
+            variant="outline"
+            className="border-rose-200 text-xs font-bold text-rose-600"
+          >
             <MessageSquareQuote className="mr-1 h-3.5 w-3.5" /> Renter Feedback
           </Badge>
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
             Loved by Outdoor Adventurers
           </h2>
           <p className="mx-auto max-w-xl text-sm text-slate-500 dark:text-slate-400">
-            Here is what verified customers and equipment providers have to say about GearUp.
+            Here is what verified customers and equipment providers have to say
+            about GearUp.
           </p>
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {testimonials.map((t, idx) => (
-            <Card key={idx} className="border-slate-200 dark:border-slate-800 shadow-sm">
+            <Card
+              key={idx}
+              className="border-slate-200 shadow-sm dark:border-slate-800"
+            >
               <CardContent className="space-y-4 p-6">
                 <div className="flex items-center gap-1 text-amber-400">
                   {Array.from({ length: t.stars }).map((_, i) => (
                     <Star key={i} className="h-4 w-4 fill-amber-400" />
                   ))}
                 </div>
-                <p className="text-xs italic leading-relaxed text-slate-600 dark:text-slate-300">
+                <p className="text-xs leading-relaxed text-slate-600 italic dark:text-slate-300">
                   &ldquo;{t.comment}&rdquo;
                 </p>
                 <div className="flex items-center justify-between border-t border-slate-100 pt-3 dark:border-slate-800">
                   <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-white">{t.name}</p>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">
+                      {t.name}
+                    </p>
                     <p className="text-[11px] text-slate-400">{t.city}</p>
                   </div>
                   <Badge variant="secondary" className="text-[10px]">
@@ -443,14 +479,18 @@ export default function HomePage() {
       <section className="border-t border-slate-200 bg-slate-50/80 px-4 py-16 sm:px-6 lg:px-8 dark:border-slate-800 dark:bg-slate-900/40">
         <div className="mx-auto max-w-3xl space-y-8">
           <div className="space-y-2 text-center">
-            <Badge variant="outline" className="text-xs font-bold text-primary border-rose-200">
+            <Badge
+              variant="outline"
+              className="text-primary border-rose-200 text-xs font-bold"
+            >
               <HelpCircle className="mr-1 h-3.5 w-3.5" /> FAQs
             </Badge>
             <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
               Frequently Asked Questions
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              Everything you need to know about renting and listing equipment on GearUp.
+              Everything you need to know about renting and listing equipment on
+              GearUp.
             </p>
           </div>
 
@@ -465,9 +505,7 @@ export default function HomePage() {
                   >
                     {faq.q}
                   </AccordionTrigger>
-                  <AccordionContent isOpen={isOpen}>
-                    {faq.a}
-                  </AccordionContent>
+                  <AccordionContent isOpen={isOpen}>{faq.a}</AccordionContent>
                 </AccordionItem>
               );
             })}
@@ -492,7 +530,8 @@ export default function HomePage() {
             Ready to Start Your Next Adventure?
           </h2>
           <p className="mx-auto max-w-xl text-base text-slate-300">
-            Join thousands of outdoor enthusiasts renting top-quality sports equipment at fractions of retail price.
+            Join thousands of outdoor enthusiasts renting top-quality sports
+            equipment at fractions of retail price.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button
@@ -506,7 +545,9 @@ export default function HomePage() {
               size="lg"
               variant="outline"
               className="border-white/30 bg-white/10 px-8 font-bold text-white backdrop-blur-md hover:bg-white hover:text-slate-900"
-              onClick={() => (window.location.href = "/auth/register?role=Provider")}
+              onClick={() =>
+                (window.location.href = "/auth/register?role=Provider")
+              }
             >
               List Your Gear Free
             </Button>

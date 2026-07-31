@@ -158,7 +158,7 @@ export default function IncomingOrdersPage() {
                     Customer: <strong>{order.customer?.name}</strong> (
                     {order.customer?.email})
                   </p>
-                  <p className="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                  <p className="flex items-center gap-1 text-xs font-medium text-slate-500">
                     <Calendar className="h-3.5 w-3.5 text-blue-600" />
                     {new Date(order.startDate).toLocaleDateString()} -{" "}
                     {new Date(order.endDate).toLocaleDateString()}

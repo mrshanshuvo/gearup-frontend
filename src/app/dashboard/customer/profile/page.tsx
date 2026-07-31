@@ -78,7 +78,7 @@ export default function ProfilePage() {
 
             <Badge
               variant="outline"
-              className="border-blue-600 text-blue-600 font-bold"
+              className="border-blue-600 font-bold text-blue-600"
             >
               <Shield className="mr-1 h-3 w-3" /> {user?.role} Account
             </Badge>

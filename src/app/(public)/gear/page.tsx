@@ -89,7 +89,11 @@ function BrowseGearContent() {
     } else if (sortOption === "name-asc") {
       items.sort((a, b) => a.name.localeCompare(b.name));
     } else if (sortOption === "newest") {
-      items.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+      items.sort(
+        (a, b) =>
+          new Date(b.createdAt || 0).getTime() -
+          new Date(a.createdAt || 0).getTime()
+      );
     }
     return items;
   }, [gearItems, sortOption]);
@@ -109,8 +113,12 @@ function BrowseGearContent() {
 
         {/* Live Active Results & Sort Bar */}
         <div className="flex items-center gap-3">
-          <span className="text-xs font-semibold text-slate-500 whitespace-nowrap">
-            Showing <strong className="text-slate-900 dark:text-white">{sortedGearItems.length}</strong> items
+          <span className="text-xs font-semibold whitespace-nowrap text-slate-500">
+            Showing{" "}
+            <strong className="text-slate-900 dark:text-white">
+              {sortedGearItems.length}
+            </strong>{" "}
+            items
           </span>
           <select
             value={sortOption}
@@ -131,14 +139,13 @@ function BrowseGearContent() {
         <aside className="h-fit space-y-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between border-b border-slate-200 pb-4 dark:border-slate-800">
             <h2 className="flex items-center gap-2 text-lg font-bold">
-              <SlidersHorizontal className="h-5 w-5 text-primary" />{" "}
-              Filters
+              <SlidersHorizontal className="text-primary h-5 w-5" /> Filters
             </h2>
             <Button
               variant="ghost"
               size="sm"
               onClick={clearFilters}
-              className="gap-1 text-xs text-slate-500 hover:text-red-500 cursor-pointer"
+              className="cursor-pointer gap-1 text-xs text-slate-500 hover:text-red-500"
             >
               <RotateCcw className="h-3.5 w-3.5" /> Reset
             </Button>
@@ -211,13 +218,13 @@ function BrowseGearContent() {
               type="checkbox"
               checked={availableOnly}
               onChange={(e) => setAvailableOnly(e.target.checked)}
-              className="h-4 w-4 rounded accent-rose-600 cursor-pointer"
+              className="h-4 w-4 cursor-pointer rounded accent-rose-600"
             />
           </div>
 
           <Button
             onClick={applyFilters}
-            className="w-full bg-primary text-primary-foreground hover:bg-rose-700 font-bold cursor-pointer"
+            className="bg-primary text-primary-foreground w-full cursor-pointer font-bold hover:bg-rose-700"
           >
             Apply Filters
           </Button>
@@ -232,7 +239,7 @@ function BrowseGearContent() {
               ))}
             </div>
           ) : sortedGearItems.length === 0 ? (
-            <div className="space-y-4 rounded-2xl border border-slate-200 bg-white py-20 px-4 text-center dark:border-slate-800 dark:bg-slate-900">
+            <div className="space-y-4 rounded-2xl border border-slate-200 bg-white px-4 py-20 text-center dark:border-slate-800 dark:bg-slate-900">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-rose-50 text-rose-500 dark:bg-rose-950 dark:text-rose-400">
                 <Filter className="h-8 w-8" />
               </div>
@@ -240,11 +247,17 @@ function BrowseGearContent() {
                 <p className="text-xl font-extrabold text-slate-900 dark:text-slate-100">
                   No Equipment Matches Your Filters
                 </p>
-                <p className="mx-auto max-w-sm text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-                  We couldn't find any gear matching your current search parameters. Try expanding your price range or clearing keyword filters.
+                <p className="mx-auto max-w-sm text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+                  We couldn't find any gear matching your current search
+                  parameters. Try expanding your price range or clearing keyword
+                  filters.
                 </p>
               </div>
-              <Button variant="outline" onClick={clearFilters} className="font-bold">
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="font-bold"
+              >
                 <RotateCcw className="mr-2 h-4 w-4" /> Reset All Filters
               </Button>
             </div>

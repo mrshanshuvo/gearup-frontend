@@ -39,8 +39,8 @@ export function GearCard({ gear }: GearCardProps) {
             <Badge
               className={
                 isAvailable
-                  ? "bg-rose-500/90 text-white hover:bg-rose-600 font-bold"
-                  : "bg-red-500/90 text-white hover:bg-red-600 font-bold"
+                  ? "bg-rose-500/90 font-bold text-white hover:bg-rose-600"
+                  : "bg-red-500/90 font-bold text-white hover:bg-red-600"
               }
             >
               {isAvailable ? `${gear.stock} Available` : "Out of Stock"}
@@ -53,14 +53,14 @@ export function GearCard({ gear }: GearCardProps) {
           {/* Category & Brand */}
           <div className="flex items-center justify-between text-xs font-medium text-slate-500 dark:text-slate-400">
             <span className="flex items-center gap-1">
-              <Tag className="h-3.5 w-3.5 text-primary" />
+              <Tag className="text-primary h-3.5 w-3.5" />
               {gear.category?.name || "General"}
             </span>
             <span>{gear.brand}</span>
           </div>
 
           {/* Gear Name */}
-          <h3 className="line-clamp-1 text-lg font-bold text-slate-900 transition-colors group-hover:text-primary dark:text-slate-100">
+          <h3 className="group-hover:text-primary line-clamp-1 text-lg font-bold text-slate-900 transition-colors dark:text-slate-100">
             {gear.name}
           </h3>
 
@@ -74,7 +74,7 @@ export function GearCard({ gear }: GearCardProps) {
       {/* Card Footer Price & Action */}
       <CardFooter className="mt-4 flex items-center justify-between border-t border-slate-100 p-5 pt-0 dark:border-slate-900">
         <div>
-          <span className="text-2xl font-black text-primary">
+          <span className="text-primary text-2xl font-black">
             ${gear.pricePerDay}
           </span>
           <span className="text-xs text-slate-500 dark:text-slate-400">
@@ -84,7 +84,7 @@ export function GearCard({ gear }: GearCardProps) {
 
         <Button
           size="sm"
-          className="bg-primary text-primary-foreground hover:bg-rose-700 font-bold"
+          className="bg-primary text-primary-foreground font-bold hover:bg-rose-700"
         >
           <Link href={`/gear/${gear.id}`} className="flex items-center gap-1">
             View Details <ArrowRight className="h-3.5 w-3.5" />

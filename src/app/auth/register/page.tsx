@@ -160,7 +160,7 @@ export default function RegisterPage() {
           <CardFooter className="flex flex-col space-y-4">
             <Button
               type="submit"
-              className="w-full bg-primary font-bold text-primary-foreground hover:bg-rose-700"
+              className="bg-primary text-primary-foreground w-full font-bold hover:bg-rose-700"
               disabled={isPending}
             >
               {isPending ? (
@@ -177,7 +177,7 @@ export default function RegisterPage() {
               Already have an account?{" "}
               <Link
                 href="/auth/login"
-                className="font-bold text-primary hover:underline"
+                className="text-primary font-bold hover:underline"
               >
                 Sign In
               </Link>

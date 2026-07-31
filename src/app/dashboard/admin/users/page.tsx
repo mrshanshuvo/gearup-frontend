@@ -173,8 +173,8 @@ export default function UserManagementPage() {
                           disabled={updateStatus.isPending}
                           className={
                             user.active_status === "Active"
-                              ? "border-red-200 text-red-600 hover:bg-red-50 font-bold"
-                              : "border-blue-200 text-blue-600 hover:bg-blue-50 font-bold"
+                              ? "border-red-200 font-bold text-red-600 hover:bg-red-50"
+                              : "border-blue-200 font-bold text-blue-600 hover:bg-blue-50"
                           }
                           onClick={() =>
                             handleToggleStatus(

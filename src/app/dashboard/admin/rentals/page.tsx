@@ -138,7 +138,7 @@ export default function AllRentalsAdminPage() {
                     <td className="p-4 text-slate-700 dark:text-slate-300">
                       {order.gearItem?.name}
                     </td>
-                    <td className="flex items-center gap-1 p-4 text-xs text-slate-500 font-medium">
+                    <td className="flex items-center gap-1 p-4 text-xs font-medium text-slate-500">
                       <Calendar className="h-3.5 w-3.5 text-blue-600" />
                       {new Date(order.startDate).toLocaleDateString()} -{" "}
                       {new Date(order.endDate).toLocaleDateString()}

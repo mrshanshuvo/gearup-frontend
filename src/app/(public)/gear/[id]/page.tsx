@@ -152,7 +152,7 @@ export default function GearDetailPage({
             <div className="flex items-center justify-between">
               <Badge
                 variant="outline"
-                className="flex items-center gap-1 border-rose-500 text-rose-600 font-bold"
+                className="flex items-center gap-1 border-rose-500 font-bold text-rose-600"
               >
                 <Tag className="h-3.5 w-3.5" />{" "}
                 {gear.category?.name || "General"}
@@ -176,7 +176,7 @@ export default function GearDetailPage({
             </p>
 
             <div className="flex items-baseline gap-2 pt-2">
-              <span className="text-4xl font-black text-primary">
+              <span className="text-primary text-4xl font-black">
                 ${gear.pricePerDay}
               </span>
               <span className="text-sm text-slate-500">/ day</span>
@@ -195,7 +195,7 @@ export default function GearDetailPage({
           {/* Provider Chip */}
           {gear.provider && (
             <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-100 p-3 dark:border-slate-800 dark:bg-slate-900">
-              <ShieldCheck className="h-6 w-6 text-primary" />
+              <ShieldCheck className="text-primary h-6 w-6" />
               <div>
                 <p className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                   Provided by {gear.provider.name}
@@ -211,7 +211,7 @@ export default function GearDetailPage({
           <Card className="border-slate-200 bg-slate-50/50 shadow-md dark:border-slate-800 dark:bg-slate-900/50">
             <CardContent className="space-y-4 p-6">
               <h3 className="flex items-center gap-2 text-base font-bold">
-                <Calendar className="h-5 w-5 text-primary" /> Select Rental
+                <Calendar className="text-primary h-5 w-5" /> Select Rental
                 Duration
               </h3>
 
@@ -272,7 +272,7 @@ export default function GearDetailPage({
               <Button
                 onClick={handleRentNow}
                 disabled={!isAvailable || rentalDays <= 0 || isSubmitting}
-                className="w-full bg-primary py-6 text-base font-bold text-primary-foreground shadow-lg hover:bg-rose-700"
+                className="bg-primary text-primary-foreground w-full py-6 text-base font-bold shadow-lg hover:bg-rose-700"
               >
                 {isSubmitting ? (
                   <>
@@ -292,7 +292,7 @@ export default function GearDetailPage({
       </div>
 
       {/* Customer Reviews & Feedback Section */}
-      <div className="border-t border-slate-200 pt-12 space-y-6 dark:border-slate-800">
+      <div className="space-y-6 border-t border-slate-200 pt-12 dark:border-slate-800">
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
@@ -303,28 +303,42 @@ export default function GearDetailPage({
             </p>
           </div>
           <div className="flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-bold dark:border-slate-800 dark:bg-slate-900">
-            <span className="text-amber-500 font-extrabold text-base">4.9 ★</span>
-            <span className="text-xs text-slate-400 font-normal">(Verified Reviews)</span>
+            <span className="text-base font-extrabold text-amber-500">
+              4.9 ★
+            </span>
+            <span className="text-xs font-normal text-slate-400">
+              (Verified Reviews)
+            </span>
           </div>
         </div>
 
         {(gear as any).reviews && (gear as any).reviews.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {(gear as any).reviews.map((rev: any, idx: number) => (
-              <Card key={rev.id || idx} className="border-slate-200 dark:border-slate-800">
-                <CardContent className="p-5 space-y-3">
+              <Card
+                key={rev.id || idx}
+                className="border-slate-200 dark:border-slate-800"
+              >
+                <CardContent className="space-y-3 p-5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1 text-amber-500">
                       {Array.from({ length: rev.rating || 5 }).map((_, i) => (
-                        <span key={i} className="text-sm">★</span>
+                        <span key={i} className="text-sm">
+                          ★
+                        </span>
                       ))}
                     </div>
                     <span className="text-[11px] text-slate-400">
-                      {rev.createdAt ? new Date(rev.createdAt).toLocaleDateString() : "Verified Renter"}
+                      {rev.createdAt
+                        ? new Date(rev.createdAt).toLocaleDateString()
+                        : "Verified Renter"}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-600 leading-relaxed dark:text-slate-300">
-                    &ldquo;{rev.comment || "Great equipment! Exactly as described and in excellent working condition."}&rdquo;
+                  <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-300">
+                    &ldquo;
+                    {rev.comment ||
+                      "Great equipment! Exactly as described and in excellent working condition."}
+                    &rdquo;
                   </p>
                   <p className="text-[11px] font-bold text-slate-700 dark:text-slate-300">
                     — {rev.user?.name || "Verified Renter"}
@@ -334,14 +348,18 @@ export default function GearDetailPage({
             ))}
           </div>
         ) : (
-          <Card className="border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50">
-            <CardContent className="p-8 text-center space-y-2">
-              <div className="flex justify-center text-amber-400 text-lg">★★★★★</div>
+          <Card className="border-slate-200 bg-slate-50/50 dark:border-slate-800 dark:bg-slate-900/50">
+            <CardContent className="space-y-2 p-8 text-center">
+              <div className="flex justify-center text-lg text-amber-400">
+                ★★★★★
+              </div>
               <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
                 100% Quality Satisfaction Guaranteed
               </p>
-              <p className="text-xs text-slate-500 max-w-md mx-auto">
-                Be the first to leave a review after completing your rental order! All items undergo provider quality verification prior to pickup.
+              <p className="mx-auto max-w-md text-xs text-slate-500">
+                Be the first to leave a review after completing your rental
+                order! All items undergo provider quality verification prior to
+                pickup.
               </p>
             </CardContent>
           </Card>

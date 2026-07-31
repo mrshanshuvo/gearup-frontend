@@ -27,8 +27,7 @@ const AccordionItem = React.forwardRef<
 ));
 AccordionItem.displayName = "AccordionItem";
 
-interface AccordionTriggerProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+interface AccordionTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   isOpen?: boolean;
   onToggle?: () => void;
@@ -43,7 +42,7 @@ const AccordionTrigger = React.forwardRef<
     type="button"
     onClick={onToggle}
     className={cn(
-      "flex w-full items-center justify-between py-3 font-bold text-slate-900 transition-all hover:text-primary dark:text-slate-100 text-left outline-none cursor-pointer",
+      "hover:text-primary flex w-full cursor-pointer items-center justify-between py-3 text-left font-bold text-slate-900 transition-all outline-none dark:text-slate-100",
       className
     )}
     {...props}
@@ -52,7 +51,7 @@ const AccordionTrigger = React.forwardRef<
     <ChevronDownIcon
       className={cn(
         "h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200",
-        isOpen && "rotate-180 text-primary"
+        isOpen && "text-primary rotate-180"
       )}
     />
   </button>
@@ -72,7 +71,7 @@ const AccordionContent = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "pb-4 pt-1 text-sm text-slate-600 dark:text-slate-400 leading-relaxed transition-all animate-in fade-in-50",
+        "animate-in fade-in-50 pt-1 pb-4 text-sm leading-relaxed text-slate-600 transition-all dark:text-slate-400",
         className
       )}
       {...props}
