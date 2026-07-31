@@ -67,9 +67,20 @@ export function useLogout() {
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
   return async () => {
-    await authService.logout();
+    // 1. Clear Zustand state first synchronously
     clearAuth();
+
+    // 2. Clear backend session & cookies
+    await authService.logout();
+
+    // 3. Clear Zustand persisted localStorage backup explicitly
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("gearup-auth");
+    }
+
     toast.info("Logged out successfully");
+
+    // 4. Force browser navigation to login page
     window.location.href = "/auth/login";
   };
 }

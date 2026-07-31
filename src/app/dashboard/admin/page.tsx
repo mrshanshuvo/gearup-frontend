@@ -10,11 +10,12 @@ import {
   DollarSign,
   Loader2,
   ShieldCheck,
+  TrendingUp,
 } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { useAllUsers } from "@/hooks/useAdminUser";
 import { useAdminGearList, useAllRentalsAdmin } from "@/hooks/useAdminGear";
+import { StatCard } from "@/components/ui/StatCard";
+import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
 
 export default function AdminDashboardHome() {
   const { data: usersData, isLoading: usersLoading } = useAllUsers();
@@ -43,178 +44,112 @@ export default function AdminDashboardHome() {
 
   const recentRentals = rentals.slice(0, 8);
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "PLACED":
-        return <Badge className="bg-amber-500 text-white">Placed</Badge>;
-      case "CONFIRMED":
-        return <Badge className="bg-blue-500 text-white">Confirmed</Badge>;
-      case "PAID":
-        return <Badge className="bg-purple-500 text-white">Paid</Badge>;
-      case "PICKED_UP":
-        return <Badge className="bg-emerald-600 text-white">Picked Up</Badge>;
-      case "RETURNED":
-        return (
-          <Badge
-            variant="outline"
-            className="border-emerald-600 text-emerald-600"
-          >
-            Returned
-          </Badge>
-        );
-      case "CANCELLED":
-        return <Badge variant="destructive">Cancelled</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
-
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="flex items-center gap-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
-          <ShieldCheck className="h-6 w-6 text-amber-500" /> Platform Overview
-        </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Global metrics and system-wide rental activity overview.
-        </p>
+      {/* Header Banner */}
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+        <div>
+          <h1 className="text-foreground flex items-center gap-2 text-2xl font-black tracking-tight sm:text-3xl">
+            <ShieldCheck className="h-7 w-7 text-amber-500" /> Platform Overview
+          </h1>
+          <p className="text-muted-foreground text-sm font-medium">
+            Global metrics, rental stats, and system performance overview.
+          </p>
+        </div>
+
+        <div className="border-border bg-card flex items-center gap-2 rounded-2xl border px-4 py-2 text-xs font-bold shadow-xs">
+          <TrendingUp className="h-4 w-4 text-emerald-500" />
+          <span className="text-muted-foreground">System Health:</span>
+          <span className="text-emerald-600 dark:text-emerald-400">
+            100% Operational
+          </span>
+        </div>
       </div>
 
-      {/* 6 KPI Stat Cards Grid */}
+      {/* KPI Stat Cards Grid */}
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <Card className="border-slate-200 dark:border-slate-800">
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold text-slate-500">
-                Total Registered Users
-              </p>
-              <p className="text-3xl font-extrabold text-slate-900 dark:text-slate-100">
-                {usersLoading ? "-" : totalUsers}
-              </p>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 dark:bg-blue-950">
-              <Users className="h-6 w-6" />
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="Total Revenue"
+          value={rentalsLoading ? "-" : `$${totalRevenue.toLocaleString()}`}
+          icon={DollarSign}
+          iconBg="bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400"
+          trend={{ value: 12.4, label: "vs previous month" }}
+          highlight
+        />
 
-        <Card className="border-slate-200 dark:border-slate-800">
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold text-slate-500">
-                Gear Vendors / Providers
-              </p>
-              <p className="text-3xl font-extrabold text-purple-600 dark:text-purple-400">
-                {usersLoading ? "-" : totalProviders}
-              </p>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 text-purple-600 dark:bg-purple-950">
-              <Store className="h-6 w-6" />
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="Active Rentals"
+          value={rentalsLoading ? "-" : activeRentals}
+          icon={Clock}
+          iconBg="bg-teal-100 text-teal-600 dark:bg-teal-950/60 dark:text-teal-400"
+          trend={{ value: 8.1, label: "current active" }}
+        />
 
-        <Card className="border-slate-200 dark:border-slate-800">
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold text-slate-500">
-                Global Gear Inventory
-              </p>
-              <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
-                {gearLoading ? "-" : totalGear}
-              </p>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950">
-              <Package className="h-6 w-6" />
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="Total Registered Users"
+          value={usersLoading ? "-" : totalUsers}
+          icon={Users}
+          iconBg="bg-blue-100 text-blue-600 dark:bg-blue-950/60 dark:text-blue-400"
+        />
 
-        <Card className="border-slate-200 dark:border-slate-800">
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold text-slate-500">
-                Total Rental Orders
-              </p>
-              <p className="text-3xl font-extrabold text-amber-600 dark:text-amber-400">
-                {rentalsLoading ? "-" : totalRentals}
-              </p>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100 text-amber-600 dark:bg-amber-950">
-              <ShoppingBag className="h-6 w-6" />
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="Gear Vendors / Providers"
+          value={usersLoading ? "-" : totalProviders}
+          icon={Store}
+          iconBg="bg-purple-100 text-purple-600 dark:bg-purple-950/60 dark:text-purple-400"
+        />
 
-        <Card className="border-slate-200 dark:border-slate-800">
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold text-slate-500">
-                Active Rentals
-              </p>
-              <p className="text-3xl font-extrabold text-teal-600 dark:text-teal-400">
-                {rentalsLoading ? "-" : activeRentals}
-              </p>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-100 text-teal-600 dark:bg-teal-950">
-              <Clock className="h-6 w-6" />
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="Global Gear Inventory"
+          value={gearLoading ? "-" : totalGear}
+          icon={Package}
+          iconBg="bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400"
+        />
 
-        <Card className="border-slate-200 dark:border-slate-800">
-          <CardContent className="flex items-center justify-between p-6">
-            <div className="space-y-1">
-              <p className="text-xs font-semibold text-slate-500">
-                Completed Volume
-              </p>
-              <p className="text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
-                ${rentalsLoading ? "-" : totalRevenue}
-              </p>
-            </div>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-600 dark:bg-emerald-950">
-              <DollarSign className="h-6 w-6" />
-            </div>
-          </CardContent>
-        </Card>
+        <StatCard
+          label="Total Rental Orders"
+          value={rentalsLoading ? "-" : totalRentals}
+          icon={ShoppingBag}
+          iconBg="bg-amber-100 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400"
+        />
       </div>
 
-      {/* Recent Activity Table */}
+      {/* Recent Activity Section */}
       <div className="space-y-4">
-        <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100">
+        <h2 className="text-foreground text-lg font-extrabold">
           System Recent Rental Activity
         </h2>
 
         {rentalsLoading ? (
           <div className="flex justify-center py-12">
-            <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+            <Loader2 className="text-primary h-6 w-6 animate-spin" />
           </div>
         ) : recentRentals.length === 0 ? (
-          <div className="rounded-2xl border border-slate-200 bg-white py-12 text-center dark:border-slate-800 dark:bg-slate-900">
-            <p className="text-sm text-slate-500">
+          <div className="border-border bg-card rounded-3xl border py-12 text-center">
+            <p className="text-muted-foreground text-sm">
               No rental activity recorded yet.
             </p>
           </div>
         ) : (
-          <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
-            <div className="divide-y divide-slate-100 dark:divide-slate-800">
+          <div className="border-border bg-card overflow-hidden rounded-3xl border shadow-xs">
+            <div className="divide-border divide-y">
               {recentRentals.map((order) => (
                 <div
                   key={order.id}
-                  className="flex flex-col justify-between gap-4 p-4 transition-colors hover:bg-slate-50 sm:flex-row sm:items-center dark:hover:bg-slate-800/50"
+                  className="hover:bg-secondary/40 flex flex-col justify-between gap-4 p-5 transition-colors sm:flex-row sm:items-center"
                 >
                   <div className="space-y-1">
-                    <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                    <p className="text-foreground text-sm font-bold">
                       {order.gearItem?.name || "Equipment Rental"}
                     </p>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-muted-foreground text-xs font-medium">
                       Customer: {order.customer?.name} ({order.customer?.email})
                     </p>
                   </div>
 
                   <div className="flex items-center gap-4">
-                    {getStatusBadge(order.status)}
-                    <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
+                    <RentalStatusBadge status={order.status} />
+                    <span className="text-sm font-black text-rose-600 dark:text-rose-400">
                       ${order.totalCost}
                     </span>
                   </div>

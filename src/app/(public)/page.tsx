@@ -27,21 +27,16 @@ export default function HomePage() {
   return (
     <div className="space-y-16 pb-16">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-linear-to-br from-emerald-600 via-teal-700 to-slate-900 px-4 py-24 text-white sm:px-6 lg:px-8">
-        <div className="relative z-10 mx-auto max-w-7xl space-y-6 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/10 px-3 py-1 text-xs font-semibold text-emerald-200 backdrop-blur-md">
-            <Sparkles className="h-3.5 w-3.5" /> Next-Gen Sports & Outdoor
-            Equipment Rental
-          </div>
-
-          <h1 className="mx-auto max-w-4xl text-4xl leading-tight font-extrabold tracking-tight sm:text-6xl">
-            Rent Premium Sports Gear <br className="hidden sm:inline" />
-            <span className="bg-linear-to-r from-emerald-200 to-teal-300 bg-clip-text text-transparent">
+      <section className="relative overflow-hidden bg-slate-900 px-4 py-24 text-white sm:px-6 lg:px-8">
+        <div className="relative z-10 mx-auto max-w-4xl text-center">
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl">
+            Rent Sports & Outdoor Gear <br />
+            <span className="text-blue-400">
               Instantly & Effortlessly
             </span>
           </h1>
 
-          <p className="mx-auto max-w-2xl text-lg text-emerald-100/90 sm:text-xl">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-emerald-100/90 sm:text-xl">
             Browse top-quality outdoor, camping, and athletic equipment from
             trusted providers near you.
           </p>
