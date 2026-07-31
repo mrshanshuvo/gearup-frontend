@@ -14,14 +14,36 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
 import { useCustomerRentals, useCancelRental } from "@/hooks/useRental";
+import { useCreatePaymentIntent } from "@/hooks/usePayment";
+import { StripePaymentModal } from "./[id]/_components/StripePaymentModal";
 import { toast } from "sonner";
 
 export default function MyOrdersPage() {
   const router = useRouter();
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
-  const { data: rentalsData, isLoading } = useCustomerRentals();
+  const { data: rentalsData, isLoading, refetch } = useCustomerRentals();
   const cancelRental = useCancelRental();
+  const createPaymentIntent = useCreatePaymentIntent();
   const rentals = rentalsData?.data || [];
+
+  const [activePaymentOrder, setActivePaymentOrder] = useState<{
+    id: string;
+    totalCost: number;
+    transactionId: string;
+  } | null>(null);
+
+  const handlePayNow = async (orderId: string, totalCost: number) => {
+    try {
+      const res = await createPaymentIntent.mutateAsync(orderId);
+      const transactionId =
+        (res.data as any)?.transactionId ||
+        (res.data as any)?.paymentIntentId ||
+        `mock_tx_${Date.now()}`;
+      setActivePaymentOrder({ id: orderId, totalCost, transactionId });
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to initiate payment");
+    }
+  };
 
   const handleCancelOrder = async (id: string) => {
     try {
@@ -163,14 +185,16 @@ export default function MyOrdersPage() {
                       <>
                         <Button
                           size="sm"
-                          onClick={() =>
-                            router.push(
-                              `/dashboard/customer/orders/${order.id}`
-                            )
-                          }
+                          disabled={createPaymentIntent.isPending}
+                          onClick={() => handlePayNow(order.id, order.totalCost)}
                           className="cursor-pointer bg-blue-600 font-bold text-white shadow-sm hover:bg-blue-700"
                         >
-                          <CreditCard className="mr-1.5 h-3.5 w-3.5" /> Pay Now
+                          {createPaymentIntent.isPending ? (
+                            <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                          ) : (
+                            <CreditCard className="mr-1.5 h-3.5 w-3.5" />
+                          )}
+                          Pay Now
                         </Button>
                         <Button
                           variant="outline"
@@ -254,6 +278,20 @@ export default function MyOrdersPage() {
             </div>
           ))}
         </div>
+      )}
+
+      {/* Stripe Card Payment Modal */}
+      {activePaymentOrder && (
+        <StripePaymentModal
+          orderId={activePaymentOrder.id}
+          totalCost={activePaymentOrder.totalCost}
+          transactionId={activePaymentOrder.transactionId}
+          onClose={() => setActivePaymentOrder(null)}
+          onSuccess={() => {
+            setActivePaymentOrder(null);
+            refetch();
+          }}
+        />
       )}
     </div>
   );

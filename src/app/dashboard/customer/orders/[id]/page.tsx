@@ -30,7 +30,12 @@ export default function OrderDetailPage({
   const orderId = resolvedParams.id;
   const router = useRouter();
 
-  const { data: orderResponse, isLoading, isError, refetch } = useRentalDetail(orderId);
+  const {
+    data: orderResponse,
+    isLoading,
+    isError,
+    refetch,
+  } = useRentalDetail(orderId);
   const cancelRental = useCancelRental();
   const createPaymentIntent = useCreatePaymentIntent();
 
@@ -90,15 +95,6 @@ export default function OrderDetailPage({
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-4 py-6 sm:px-6 lg:px-8">
-      {/* Back Button */}
-      <Button
-        variant="ghost"
-        onClick={() => router.push("/dashboard/customer/orders")}
-        className="flex cursor-pointer items-center gap-2 text-slate-600 dark:text-slate-400"
-      >
-        <ArrowLeft className="h-4 w-4" /> Back to My Orders
-      </Button>
-
       {/* Header Summary Box */}
       <div className="flex flex-col justify-between gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-xs sm:flex-row sm:items-center dark:border-slate-800 dark:bg-slate-900">
         <div className="space-y-1">
