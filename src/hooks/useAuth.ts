@@ -16,6 +16,9 @@ export function useLogin() {
         const { accessToken } = res.data;
 
         try {
+          // Immediately store token so axiosInstance request interceptor attaches Bearer token to getMe()
+          useAuthStore.getState().setAccessToken(accessToken);
+
           const profileRes = await authService.getMe();
           if (profileRes.success && profileRes.data) {
             setAuth(profileRes.data, accessToken);
