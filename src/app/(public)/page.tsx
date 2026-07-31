@@ -52,7 +52,9 @@ export default function HomePage() {
           <div
             key={src}
             className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
-              idx === currentImageIndex ? "opacity-50 scale-105" : "opacity-0 scale-100"
+              idx === currentImageIndex
+                ? "scale-105 opacity-80"
+                : "scale-100 opacity-0"
             }`}
             style={{ transitionProperty: "opacity, transform" }}
           >
@@ -61,29 +63,31 @@ export default function HomePage() {
               alt="Sports & Outdoor Adventure"
               fill
               priority={idx === 0}
-              className="object-cover object-center filter brightness-90 transition-transform duration-7000 ease-linear"
+              className="object-cover object-center filter brightness-100 transition-transform duration-7000 ease-linear"
             />
           </div>
         ))}
 
-        {/* Dark Vignette Overlay for Readability */}
-        <div className="absolute inset-0 z-1 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950/95" />
+        {/* Lighter Vignette Overlay for Crisp Text & Visible Imagery */}
+        <div className="absolute inset-0 z-1 bg-gradient-to-b from-slate-950/70 via-slate-950/50 to-slate-950/85" />
 
         {/* Centered Hero Content Container */}
-        <div className="relative z-10 mx-auto max-w-4xl text-center space-y-6">
+        <div className="relative z-10 mx-auto max-w-4xl space-y-6 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-rose-500/30 bg-rose-500/10 px-4 py-1.5 text-xs font-bold text-rose-400 backdrop-blur-md">
-            <Sparkles className="h-4 w-4 text-rose-400" /> Rent Top Sports & Outdoor Equipment
+            <Sparkles className="h-4 w-4 text-rose-400" /> Rent Top Sports &
+            Outdoor Equipment
           </div>
 
           <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
             Rent Sports & Outdoor Gear <br />
-            <span className="text-rose-500 font-black">
+            <span className="font-black text-rose-500">
               Instantly & Effortlessly
             </span>
           </h1>
 
-          <p className="mx-auto max-w-2xl text-lg text-slate-200/90 sm:text-xl leading-relaxed">
-            Browse top-quality outdoor, camping, cycling, and athletic equipment from trusted providers near you.
+          <p className="mx-auto max-w-2xl text-lg leading-relaxed text-slate-200/90 sm:text-xl">
+            Browse top-quality outdoor, camping, cycling, and athletic equipment
+            from trusted providers near you.
           </p>
 
           <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
@@ -98,8 +102,10 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="border-white/30 bg-white/10 px-8 font-bold text-white backdrop-blur-md hover:bg-white hover:text-slate-900 transition-all"
-              onClick={() => (window.location.href = "/auth/register?role=Provider")}
+              className="border-white/30 bg-white/10 px-8 font-bold text-white backdrop-blur-md transition-all hover:bg-white hover:text-slate-900"
+              onClick={() =>
+                (window.location.href = "/auth/register?role=Provider")
+              }
             >
               Become a Gear Provider
             </Button>
@@ -157,7 +163,7 @@ export default function HomePage() {
 
           <Button
             variant="ghost"
-            className="text-primary hover:text-rose-700 font-bold"
+            className="text-primary font-bold hover:text-rose-700"
             onClick={() => (window.location.href = "/gear")}
           >
             View All <ArrowRight className="ml-1 inline h-4 w-4" />
