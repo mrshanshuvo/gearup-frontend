@@ -3,7 +3,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreditCard, ShieldCheck, Loader2 } from "lucide-react";
+import { CreditCard, ShieldCheck, Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useConfirmPayment } from "@/hooks/usePayment";
@@ -28,6 +28,7 @@ export function StripePaymentModal({
   onClose,
   onSuccess,
 }: StripePaymentModalProps) {
+  const [showCvc, setShowCvc] = React.useState(false);
   const confirmPayment = useConfirmPayment();
 
   const {
@@ -150,14 +151,27 @@ export function StripePaymentModal({
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                 CVC / CVV
               </label>
-              <Input
-                type="password"
-                maxLength={4}
-                autoComplete="off"
-                placeholder="CVC"
-                {...register("cardCvc")}
-                className={`font-mono text-sm ${errors.cardCvc ? "border-red-500" : ""}`}
-              />
+              <div className="relative">
+                <Input
+                  type={showCvc ? "text" : "password"}
+                  maxLength={4}
+                  autoComplete="off"
+                  placeholder="CVC"
+                  {...register("cardCvc")}
+                  className={`font-mono text-sm pr-9 ${errors.cardCvc ? "border-red-500" : ""}`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowCvc(!showCvc)}
+                  className="absolute top-1/2 right-2.5 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                >
+                  {showCvc ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
               {errors.cardCvc && (
                 <p className="text-[11px] text-red-500">
                   {errors.cardCvc.message}
