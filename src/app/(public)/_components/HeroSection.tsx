@@ -47,7 +47,7 @@ export function HeroSection() {
       ))}
 
       {/* Lighter Vignette Overlay for Crisp Text & Visible Imagery */}
-      <div className="absolute inset-0 z-1 bg-gradient-to-b from-slate-950/70 via-slate-950/50 to-slate-950/85" />
+      <div className="absolute inset-0 z-1 bg-linear-to-b from-slate-950/70 via-slate-950/50 to-slate-950/85" />
 
       {/* Centered Hero Content Container */}
       <div className="relative z-10 mx-auto max-w-4xl space-y-6 text-center">
@@ -71,16 +71,15 @@ export function HeroSection() {
         <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
           <Button
             size="lg"
-            className="bg-primary px-8 font-bold text-white shadow-xl shadow-rose-500/30 hover:bg-rose-700 cursor-pointer"
+            className="bg-primary cursor-pointer px-8 font-bold text-white shadow-xl shadow-rose-500/30 hover:bg-rose-700"
             onClick={() => (window.location.href = "/gear")}
           >
-            Browse Gear Inventory{" "}
-            <ArrowRight className="ml-2 inline h-5 w-5" />
+            Browse Gear Inventory <ArrowRight className="ml-2 inline h-5 w-5" />
           </Button>
           <Button
             size="lg"
             variant="outline"
-            className="border-white/30 bg-white/10 px-8 font-bold text-white backdrop-blur-md transition-all hover:bg-white hover:text-slate-900 cursor-pointer"
+            className="cursor-pointer border-white/30 bg-white/10 px-8 font-bold text-white backdrop-blur-md transition-all hover:bg-white hover:text-slate-900"
             onClick={() =>
               (window.location.href = "/auth/register?role=Provider")
             }
@@ -95,7 +94,7 @@ export function HeroSection() {
             <button
               key={i}
               onClick={() => setCurrentImageIndex(i)}
-              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
+              className={`h-2 cursor-pointer rounded-full transition-all duration-300 ${
                 i === currentImageIndex
                   ? "w-8 bg-rose-500"
                   : "w-2 bg-white/40 hover:bg-white/70"
