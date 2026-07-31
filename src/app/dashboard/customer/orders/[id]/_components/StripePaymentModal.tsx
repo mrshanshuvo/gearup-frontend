@@ -121,9 +121,16 @@ export function StripePaymentModal({
                 placeholder="12/28"
                 {...register("cardExpiry", {
                   onChange: (e) => {
-                    const raw = e.target.value.replace(/\D/g, "").slice(0, 4);
-                    if (raw.length >= 3) {
-                      e.target.value = `${raw.slice(0, 2)}/${raw.slice(2)}`;
+                    let raw = e.target.value.replace(/\D/g, "").slice(0, 4);
+                    if (raw.length >= 2) {
+                      let month = parseInt(raw.slice(0, 2), 10);
+                      if (month > 12) month = 12;
+                      if (month === 0) month = 1;
+                      const monthStr = month < 10 ? `0${month}` : `${month}`;
+                      const yearStr = raw.slice(2);
+                      e.target.value = yearStr
+                        ? `${monthStr}/${yearStr}`
+                        : `${monthStr}/`;
                     } else {
                       e.target.value = raw;
                     }

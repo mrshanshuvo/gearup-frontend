@@ -186,7 +186,9 @@ export default function MyOrdersPage() {
                         <Button
                           size="sm"
                           disabled={createPaymentIntent.isPending}
-                          onClick={() => handlePayNow(order.id, order.totalCost)}
+                          onClick={() =>
+                            handlePayNow(order.id, order.totalCost)
+                          }
                           className="cursor-pointer bg-blue-600 font-bold text-white shadow-sm hover:bg-blue-700"
                         >
                           {createPaymentIntent.isPending ? (
