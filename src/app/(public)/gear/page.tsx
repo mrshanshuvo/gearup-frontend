@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, Filter, RotateCcw, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { GearCard } from "@/components/gear/GearCard";
 import { GearSkeleton } from "@/components/gear/GearSkeleton";
 import { useCategories, useGearList } from "@/hooks/useGear";
+import { GearItem } from "@/types";
 
 export default function BrowseGearPage() {
   return (
@@ -18,33 +19,32 @@ export default function BrowseGearPage() {
         </div>
       }
     >
-      <BrowseGearContent />
+      <GearCatalogContent />
     </React.Suspense>
   );
 }
 
-function BrowseGearContent() {
+function GearCatalogContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // URL state extraction
+  // URL state
   const categoryIdParam = searchParams.get("categoryId") || "";
   const brandParam = searchParams.get("brand") || "";
   const minPriceParam = searchParams.get("minPrice") || "";
   const maxPriceParam = searchParams.get("maxPrice") || "";
-  const availableOnlyParam = searchParams.get("availableOnly") !== "false";
+  const availableOnlyParam = searchParams.get("availableOnly") === "true";
 
-  // Local filter states
+  // Form local state
   const [selectedCategory, setSelectedCategory] = useState(categoryIdParam);
   const [brandSearch, setBrandSearch] = useState(brandParam);
   const [minPrice, setMinPrice] = useState(minPriceParam);
   const [maxPrice, setMaxPrice] = useState(maxPriceParam);
   const [availableOnly, setAvailableOnly] = useState(availableOnlyParam);
 
-  const { data: categoryData } = useCategories();
-  const categories = categoryData?.data || [];
-
-  // Query hook with active filters
+  // Queries
+  const { data: categoriesData } = useCategories();
+  const categories = categoriesData?.data || [];
   const { data: gearData, isLoading: gearLoading } = useGearList({
     categoryId: selectedCategory || undefined,
     brand: brandSearch || undefined,
@@ -53,7 +53,7 @@ function BrowseGearContent() {
     availableOnly: availableOnly || undefined,
   });
 
-  const gearItems = gearData?.data || [];
+  const gearItems = React.useMemo(() => gearData?.data || [], [gearData?.data]);
 
   // Update URL params on filter submit/change
   const applyFilters = () => {
@@ -72,7 +72,7 @@ function BrowseGearContent() {
     setBrandSearch("");
     setMinPrice("");
     setMaxPrice("");
-    setAvailableOnly(true);
+    setAvailableOnly(false);
     router.push("/gear");
   };
 
@@ -81,16 +81,16 @@ function BrowseGearContent() {
 
   // Filter and sort items
   const sortedGearItems = React.useMemo(() => {
-    let items = [...gearItems];
+    const items = [...gearItems];
     if (sortOption === "price-low") {
-      items.sort((a, b) => a.pricePerDay - b.pricePerDay);
+      items.sort((a: GearItem, b: GearItem) => a.pricePerDay - b.pricePerDay);
     } else if (sortOption === "price-high") {
-      items.sort((a, b) => b.pricePerDay - a.pricePerDay);
+      items.sort((a: GearItem, b: GearItem) => b.pricePerDay - a.pricePerDay);
     } else if (sortOption === "name-asc") {
-      items.sort((a, b) => a.name.localeCompare(b.name));
+      items.sort((a: GearItem, b: GearItem) => a.name.localeCompare(b.name));
     } else if (sortOption === "newest") {
       items.sort(
-        (a, b) =>
+        (a: GearItem, b: GearItem) =>
           new Date(b.createdAt || 0).getTime() -
           new Date(a.createdAt || 0).getTime()
       );
@@ -248,7 +248,7 @@ function BrowseGearContent() {
                   No Equipment Matches Your Filters
                 </p>
                 <p className="mx-auto max-w-sm text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-                  We couldn't find any gear matching your current search
+                  We couldn&apos;t find any gear matching your current search
                   parameters. Try expanding your price range or clearing keyword
                   filters.
                 </p>

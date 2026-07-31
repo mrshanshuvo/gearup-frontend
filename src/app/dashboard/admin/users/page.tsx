@@ -47,9 +47,10 @@ export default function UserManagementPage() {
     try {
       await updateStatus.mutateAsync({ id, active_status: nextStatus });
       toast.success(`User ${name} is now ${nextStatus}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       toast.error(
-        err.response?.data?.message || "Failed to update user status"
+        error.response?.data?.message || "Failed to update user status"
       );
     }
   };

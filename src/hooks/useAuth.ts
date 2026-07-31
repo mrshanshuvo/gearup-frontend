@@ -36,15 +36,17 @@ export function useLogin() {
                 break;
             }
           }
-        } catch (err: any) {
+        } catch (err: unknown) {
+          const error = err as { response?: { data?: { message?: string } } };
           toast.error(
-            err.response?.data?.message || "Failed to load user profile"
+            error.response?.data?.message || "Failed to load user profile"
           );
         }
       }
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Invalid email or password");
+    onError: (err: unknown) => {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Invalid email or password");
     },
   });
 }
@@ -60,8 +62,9 @@ export function useRegister() {
         router.push("/auth/login");
       }
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Registration failed");
+    onError: (err: unknown) => {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Registration failed");
     },
   });
 }

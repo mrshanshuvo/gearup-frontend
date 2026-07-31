@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import Image from "next/image";
-import { Eye, EyeOff, Loader2, Dumbbell, UserCheck, Store } from "lucide-react";
+import { Eye, EyeOff, Loader2, UserCheck, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {

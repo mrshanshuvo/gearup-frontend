@@ -45,38 +45,11 @@ export default function IncomingOrdersPage() {
     try {
       await updateStatus.mutateAsync({ id, status: newStatus });
       toast.success(`Order status updated to ${newStatus}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       toast.error(
-        err.response?.data?.message || "Failed to update order status"
+        error.response?.data?.message || "Failed to update order status"
       );
-    }
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "PLACED":
-        return (
-          <Badge className="bg-amber-500 text-white">Pending Action</Badge>
-        );
-      case "CONFIRMED":
-        return <Badge className="bg-blue-500 text-white">Confirmed</Badge>;
-      case "PAID":
-        return <Badge className="bg-purple-500 text-white">Paid</Badge>;
-      case "PICKED_UP":
-        return <Badge className="bg-emerald-600 text-white">Picked Up</Badge>;
-      case "RETURNED":
-        return (
-          <Badge
-            variant="outline"
-            className="border-emerald-600 text-emerald-600"
-          >
-            Returned
-          </Badge>
-        );
-      case "CANCELLED":
-        return <Badge variant="destructive">Cancelled</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
     }
   };
 

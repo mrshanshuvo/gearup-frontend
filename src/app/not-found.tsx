@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Home, Compass, Search } from "lucide-react";
+import { Home, Compass } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
@@ -28,7 +28,7 @@ export default function NotFound() {
           </h1>
           <p className="text-sm leading-relaxed text-slate-500 dark:text-slate-400">
             Sorry, the page or equipment listing you are looking for has been
-            moved, removed, or doesn't exist.
+            moved, removed, or doesn&apos;t exist.
           </p>
         </div>
 

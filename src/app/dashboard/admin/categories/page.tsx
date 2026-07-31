@@ -43,8 +43,9 @@ export default function CategoryManagementPage() {
       await createCategory.mutateAsync(data);
       toast.success("Category created successfully!");
       reset();
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to create category");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Failed to create category");
     }
   };
 
@@ -73,8 +74,9 @@ export default function CategoryManagementPage() {
       });
       toast.success("Category updated!");
       cancelEdit();
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to update category");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Failed to update category");
     }
   };
 
@@ -84,8 +86,9 @@ export default function CategoryManagementPage() {
     try {
       await deleteCategory.mutateAsync(id);
       toast.success(`Category "${name}" deleted`);
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to delete category");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Failed to delete category");
     }
   };
 

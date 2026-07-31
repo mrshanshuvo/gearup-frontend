@@ -51,9 +51,10 @@ export default function EditGearPage({
       await updateGear.mutateAsync({ id: gearId, payload: data });
       toast.success("Equipment listing updated successfully!");
       router.push("/dashboard/provider/gear");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       toast.error(
-        err.response?.data?.message || "Failed to update gear listing"
+        error.response?.data?.message || "Failed to update gear listing"
       );
     }
   };

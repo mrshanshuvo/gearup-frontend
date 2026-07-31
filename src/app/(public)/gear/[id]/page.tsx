@@ -86,9 +86,10 @@ export default function GearDetailPage({
         toast.success("Rental order placed successfully!");
         router.push("/dashboard/customer/orders");
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       toast.error(
-        err.response?.data?.message || "Failed to create rental order"
+        error.response?.data?.message || "Failed to create rental order"
       );
     } finally {
       setIsSubmitting(false);
@@ -312,9 +313,40 @@ export default function GearDetailPage({
           </div>
         </div>
 
-        {(gear as any).reviews && (gear as any).reviews.length > 0 ? (
+        {(
+          gear as {
+            reviews?: Array<{
+              id?: string;
+              rating?: number;
+              createdAt?: string;
+              user?: { name?: string };
+              comment?: string;
+            }>;
+          }
+        ).reviews &&
+        (
+          gear as {
+            reviews?: Array<{
+              id?: string;
+              rating?: number;
+              createdAt?: string;
+              user?: { name?: string };
+              comment?: string;
+            }>;
+          }
+        ).reviews!.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {(gear as any).reviews.map((rev: any, idx: number) => (
+            {(
+              gear as {
+                reviews?: Array<{
+                  id?: string;
+                  rating?: number;
+                  createdAt?: string;
+                  user?: { name?: string };
+                  comment?: string;
+                }>;
+              }
+            ).reviews!.map((rev, idx: number) => (
               <Card
                 key={rev.id || idx}
                 className="border-slate-200 dark:border-slate-800"

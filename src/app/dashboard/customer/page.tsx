@@ -99,7 +99,7 @@ export default function CustomerDashboardHome() {
         ) : recentOrders.length === 0 ? (
           <div className="border-border bg-card space-y-4 rounded-3xl border p-12 text-center">
             <p className="text-muted-foreground text-sm font-medium">
-              You haven't placed any rental orders yet.
+              You haven&apos;t placed any rental orders yet.
             </p>
             <Button
               onClick={() => (window.location.href = "/gear")}

@@ -4,8 +4,10 @@ import { Button } from "@/components/ui/button";
 import { GearCard } from "@/components/gear/GearCard";
 import { GearSkeleton } from "@/components/gear/GearSkeleton";
 
+import { GearItem } from "@/types";
+
 interface FeaturedGearSectionProps {
-  gearItems: any[];
+  gearItems: GearItem[];
   gearLoading: boolean;
 }
 

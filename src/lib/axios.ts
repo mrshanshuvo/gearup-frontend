@@ -45,7 +45,7 @@ axiosInstance.interceptors.response.use(
           originalRequest.headers.Authorization = `Bearer ${data.data.accessToken}`;
           return axiosInstance(originalRequest);
         }
-      } catch (refreshError) {
+      } catch {
         useAuthStore.getState().clearAuth();
       }
     }

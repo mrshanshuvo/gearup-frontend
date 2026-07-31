@@ -23,8 +23,9 @@ export default function MyGearInventoryPage() {
     try {
       await deleteGear.mutateAsync(id);
       toast.success(`"${name}" deleted successfully`);
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to delete gear");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Failed to delete gear");
     }
   };
 

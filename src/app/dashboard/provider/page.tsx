@@ -6,7 +6,6 @@ import {
   ShoppingBag,
   Clock,
   ArrowRight,
-  PlusCircle,
   Loader2,
   TrendingUp,
 } from "lucide-react";
@@ -66,7 +65,7 @@ export default function ProviderDashboardHome() {
       </div>
 
       {/* KPI Summary Stat Cards */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-4">
         <StatCard
           label="Listed Equipment"
           value={gearLoading ? "-" : totalGear}
@@ -87,6 +86,13 @@ export default function ProviderDashboardHome() {
           value={ordersLoading ? "-" : activeRentals}
           icon={Clock}
           iconBg="bg-teal-100 text-teal-600 dark:bg-teal-950/60 dark:text-teal-400"
+        />
+
+        <StatCard
+          label="Total Revenue"
+          value={ordersLoading ? "-" : `$${totalEarnings}`}
+          icon={TrendingUp}
+          iconBg="bg-emerald-100 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400"
         />
       </div>
 

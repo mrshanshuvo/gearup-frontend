@@ -224,7 +224,7 @@ export function DashboardShell({
             </button>
 
             {/* Breadcrumb pills */}
-            <nav className="flex max-w-[200px] items-center gap-1.5 overflow-x-auto rounded-xl bg-blue-50/60 px-2.5 py-1 text-xs font-medium sm:max-w-none sm:gap-2 sm:px-3 sm:py-1.5 dark:bg-blue-950/30">
+            <nav className="flex max-w-50 items-center gap-1.5 overflow-x-auto rounded-xl bg-blue-50/60 px-2.5 py-1 text-xs font-medium sm:max-w-none sm:gap-2 sm:px-3 sm:py-1.5 dark:bg-blue-950/30">
               <Home className="h-3.5 w-3.5 shrink-0 text-slate-400" />
               {pathSegments.map((segment, index) => {
                 const isLast = index === pathSegments.length - 1;

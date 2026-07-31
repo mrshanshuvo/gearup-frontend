@@ -3,7 +3,7 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { User, Mail, Shield, Loader2, CheckCircle2 } from "lucide-react";
+import { Shield, Loader2, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,8 +37,9 @@ export default function ProfilePage() {
     try {
       await updateProfile.mutateAsync(data);
       toast.success("Profile updated successfully!");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to update profile");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Failed to update profile");
     }
   };
 
@@ -85,7 +86,7 @@ export default function ProfilePage() {
 
             {user?.bio && (
               <p className="border-t border-slate-100 pt-3 text-xs text-slate-600 italic dark:border-slate-800 dark:text-slate-400">
-                "{user.bio}"
+                &quot;{user.bio}&quot;
               </p>
             )}
           </CardContent>
