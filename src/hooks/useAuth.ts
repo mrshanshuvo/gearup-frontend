@@ -64,14 +64,13 @@ export function useRegister() {
 }
 
 export function useLogout() {
-  const router = useRouter();
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
   return () => {
     authService.logout();
     clearAuth();
     toast.info("Logged out successfully");
-    router.push("/auth/login");
+    window.location.href = "/auth/login";
   };
 }
 

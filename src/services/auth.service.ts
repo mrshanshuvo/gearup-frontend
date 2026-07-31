@@ -45,6 +45,11 @@ export const authService = {
   },
 
   logout(): void {
+    Cookies.remove("accessToken", { path: "/" });
     Cookies.remove("accessToken");
+    if (typeof document !== "undefined") {
+      document.cookie =
+        "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    }
   },
 };
