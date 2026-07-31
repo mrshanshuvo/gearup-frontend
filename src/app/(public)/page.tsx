@@ -25,101 +25,100 @@ export default function HomePage() {
   const gearItems = gearData?.data || [];
   const categories = categoryData?.data || [];
 
+  // Hero background image carousel images from assets
+  const heroImages = [
+    "/hero/astrid-schaffner-bi_amI3F4co-unsplash.jpg",
+    "/hero/munbaik-cycling-clothing-Ln9uvGy5Yio-unsplash.jpg",
+    "/hero/ricardo-iv-tamayo-AFlecBlcr8M-unsplash.jpg",
+    "/hero/kari-ham-ToHKwi1KXtc-unsplash.jpg",
+    "/hero/nader-saremi-Qm_ddQ-0Ps4-unsplash.jpg",
+  ];
+
+  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, [heroImages.length]);
+
   return (
     <div className="space-y-16 pb-16">
-      {/* Hero Section with High-Impact Sports & Outdoor Photography */}
-      <section className="relative overflow-hidden bg-slate-950 px-4 py-20 text-white sm:px-6 lg:px-8">
-        {/* Background Image Overlay with Gradient Mask */}
-        <div className="absolute inset-0 z-0 opacity-40">
-          <Image
-            src="/hero/astrid-schaffner-bi_amI3F4co-unsplash.jpg"
-            alt="Outdoor sports equipment"
-            fill
-            priority
-            className="object-cover object-center filter brightness-90"
-          />
-          <div className="absolute inset-0 bg-linear-to-r from-slate-950 via-slate-950/90 to-slate-950/40" />
-        </div>
+      {/* Hero Section with Centered Layout & Background Image Carousel */}
+      <section className="relative overflow-hidden bg-slate-950 px-4 py-28 text-white sm:px-6 lg:px-8">
+        {/* Background Image Carousel Layer */}
+        {heroImages.map((src, idx) => (
+          <div
+            key={src}
+            className={`absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out ${
+              idx === currentImageIndex ? "opacity-50 scale-105" : "opacity-0 scale-100"
+            }`}
+            style={{ transitionProperty: "opacity, transform" }}
+          >
+            <Image
+              src={src}
+              alt="Sports & Outdoor Adventure"
+              fill
+              priority={idx === 0}
+              className="object-cover object-center filter brightness-90 transition-transform duration-7000 ease-linear"
+            />
+          </div>
+        ))}
 
-        <div className="relative z-10 mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-            {/* Left Content Column */}
-            <div className="space-y-6 text-left lg:col-span-7">
-              <div className="inline-flex items-center gap-2 rounded-full border border-rose-500/30 bg-rose-500/10 px-4 py-1.5 text-xs font-bold text-rose-400 backdrop-blur-md">
-                <Sparkles className="h-4 w-4 text-rose-400" /> Premium Sports & Gear Rental
-              </div>
+        {/* Dark Vignette Overlay for Readability */}
+        <div className="absolute inset-0 z-1 bg-gradient-to-b from-slate-950/85 via-slate-950/75 to-slate-950/95" />
 
-              <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:leading-tight">
-                Rent Sports & Outdoor Gear <br />
-                <span className="text-rose-500 font-black">
-                  Instantly & Effortlessly
-                </span>
-              </h1>
+        {/* Centered Hero Content Container */}
+        <div className="relative z-10 mx-auto max-w-4xl text-center space-y-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-rose-500/30 bg-rose-500/10 px-4 py-1.5 text-xs font-bold text-rose-400 backdrop-blur-md">
+            <Sparkles className="h-4 w-4 text-rose-400" /> Rent Top Sports & Outdoor Equipment
+          </div>
 
-              <p className="max-w-2xl text-lg text-slate-300 sm:text-xl">
-                Browse top-quality outdoor, camping, cycling, and athletic equipment from trusted providers near you.
-              </p>
+          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
+            Rent Sports & Outdoor Gear <br />
+            <span className="text-rose-500 font-black">
+              Instantly & Effortlessly
+            </span>
+          </h1>
 
-              <div className="flex flex-col gap-4 pt-2 sm:flex-row sm:items-center">
-                <Button
-                  size="lg"
-                  className="bg-primary px-8 font-bold text-white shadow-xl shadow-rose-500/25 hover:bg-rose-700"
-                  onClick={() => (window.location.href = "/gear")}
-                >
-                  Browse Gear Inventory{" "}
-                  <ArrowRight className="ml-2 inline h-5 w-5" />
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="border-white/30 bg-white/10 px-8 font-bold text-white backdrop-blur-md hover:bg-white hover:text-slate-900 transition-all"
-                  onClick={() => (window.location.href = "/auth/register?role=Provider")}
-                >
-                  Become a Gear Provider
-                </Button>
-              </div>
+          <p className="mx-auto max-w-2xl text-lg text-slate-200/90 sm:text-xl leading-relaxed">
+            Browse top-quality outdoor, camping, cycling, and athletic equipment from trusted providers near you.
+          </p>
 
-              {/* Quick Trust Badges */}
-              <div className="grid grid-cols-3 gap-4 border-t border-white/10 pt-6 text-xs text-slate-400">
-                <div>
-                  <p className="font-bold text-white text-sm">100% Verified</p>
-                  <p>Quality Inspected Gear</p>
-                </div>
-                <div>
-                  <p className="font-bold text-white text-sm">Flexible Dates</p>
-                  <p>Daily & Weekly Rates</p>
-                </div>
-                <div>
-                  <p className="font-bold text-white text-sm">Secure Pay</p>
-                  <p>Stripe Protected</p>
-                </div>
-              </div>
-            </div>
+          <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
+            <Button
+              size="lg"
+              className="bg-primary px-8 font-bold text-white shadow-xl shadow-rose-500/30 hover:bg-rose-700"
+              onClick={() => (window.location.href = "/gear")}
+            >
+              Browse Gear Inventory{" "}
+              <ArrowRight className="ml-2 inline h-5 w-5" />
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              className="border-white/30 bg-white/10 px-8 font-bold text-white backdrop-blur-md hover:bg-white hover:text-slate-900 transition-all"
+              onClick={() => (window.location.href = "/auth/register?role=Provider")}
+            >
+              Become a Gear Provider
+            </Button>
+          </div>
 
-            {/* Right Photography Gallery Showcase */}
-            <div className="relative lg:col-span-5">
-              <div className="relative aspect-4/5 w-full overflow-hidden rounded-3xl border border-white/20 shadow-2xl shadow-rose-500/10">
-                <Image
-                  src="/hero/munbaik-cycling-clothing-F4aMcFi8Jqk-unsplash.jpg"
-                  alt="Outdoor Adventure Gear"
-                  fill
-                  className="object-cover"
-                  priority
-                />
-                <div className="absolute inset-0 bg-linear-to-t from-slate-950/90 via-transparent to-transparent" />
-                
-                {/* Floating Gear Card Preview */}
-                <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/20 bg-slate-900/80 p-4 backdrop-blur-md text-left">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-bold text-rose-400 uppercase tracking-wider">Top Outdoor Rental</p>
-                      <h3 className="text-base font-extrabold text-white">Pro Mountain & Cycling Gear</h3>
-                    </div>
-                    <span className="rounded-xl bg-rose-600 px-3 py-1 text-sm font-black text-white">$45/day</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* Carousel Slide Indicator Dots */}
+          <div className="flex items-center justify-center gap-2 pt-6">
+            {heroImages.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentImageIndex(i)}
+                className={`h-2 rounded-full transition-all duration-300 ${
+                  i === currentImageIndex
+                    ? "w-8 bg-rose-500"
+                    : "w-2 bg-white/40 hover:bg-white/70"
+                }`}
+                aria-label={`Slide ${i + 1}`}
+              />
+            ))}
           </div>
         </div>
       </section>
