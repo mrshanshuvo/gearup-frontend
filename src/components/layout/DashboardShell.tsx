@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LogOut,
@@ -81,21 +82,29 @@ export function DashboardShell({
           {/* Top Logo & Toggle */}
           <div className="flex items-center justify-between px-2">
             {!sidebarCollapsed && (
-              <Link href="/" className="flex items-center gap-2.5">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/20">
-                  <Dumbbell className="h-5 w-5" />
-                </div>
-                <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-                  GearUp
-                </span>
+              <Link href="/" className="flex items-center">
+                <Image
+                  src="/main_logo.svg"
+                  alt="GearUp Logo"
+                  width={140}
+                  height={44}
+                  className="h-10 w-auto object-contain"
+                  priority
+                />
               </Link>
             )}
             {sidebarCollapsed && (
               <Link
                 href="/"
-                className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-md shadow-blue-500/20"
+                className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 p-1.5 shadow-md shadow-blue-500/20"
               >
-                <Dumbbell className="h-5 w-5" />
+                <Image
+                  src="/main_logo.svg"
+                  alt="GearUp Icon"
+                  width={32}
+                  height={32}
+                  className="h-full w-full object-contain brightness-0 invert"
+                />
               </Link>
             )}
             <button

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Dumbbell,
@@ -64,16 +65,15 @@ export function Navbar() {
     <header className="border-border/80 bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur-md">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo */}
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-xl font-bold tracking-tight"
-        >
-          <div className="bg-primary flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-md shadow-rose-500/20">
-            <Dumbbell className="h-5 w-5" />
-          </div>
-          <span className="text-primary">
-            GearUp
-          </span>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/main_logo.svg"
+            alt="GearUp Logo"
+            width={140}
+            height={44}
+            className="h-10 w-auto object-contain"
+            priority
+          />
         </Link>
 
         {/* Desktop Nav Links */}

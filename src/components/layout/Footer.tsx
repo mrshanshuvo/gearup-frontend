@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Dumbbell } from "lucide-react";
 
 export function Footer() {
@@ -7,14 +8,15 @@ export function Footer() {
     <footer className="border-border bg-card mt-auto w-full border-t">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <div className="flex items-center gap-2 text-lg font-bold">
-            <div className="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-lg shadow-sm">
-              <Dumbbell className="h-4 w-4" />
-            </div>
-            <span className="text-primary">
-              GearUp
-            </span>
-          </div>
+          <Link href="/" className="flex items-center">
+            <Image
+              src="/main_logo.svg"
+              alt="GearUp Logo"
+              width={130}
+              height={40}
+              className="h-9 w-auto object-contain"
+            />
+          </Link>
 
           <p className="text-muted-foreground text-center text-xs">
             &copy; {new Date().getFullYear()} GearUp Rental Services. All rights
