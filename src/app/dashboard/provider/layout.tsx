@@ -52,7 +52,7 @@ export default function ProviderDashboardLayout({
     },
     {
       label: "My Profile",
-      href: "/dashboard/customer/profile",
+      href: "/dashboard/provider/profile",
       icon: UserCircle,
       exact: false,
     },

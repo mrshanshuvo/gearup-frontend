@@ -65,7 +65,7 @@ export default function AdminDashboardLayout({
     },
     {
       label: "My Profile",
-      href: "/dashboard/customer/profile",
+      href: "/dashboard/admin/profile",
       icon: UserCircle,
       exact: false,
     },
