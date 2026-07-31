@@ -36,8 +36,8 @@ export default function MyOrdersPage() {
     try {
       const res = await createPaymentIntent.mutateAsync(orderId);
       const transactionId =
-        (res.data as any)?.transactionId ||
-        (res.data as any)?.paymentIntentId ||
+        res.data?.transactionId ||
+        res.data?.paymentIntentId ||
         `mock_tx_${Date.now()}`;
       setActivePaymentOrder({ id: orderId, totalCost, transactionId });
     } catch (err: any) {
