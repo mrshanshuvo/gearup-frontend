@@ -32,7 +32,13 @@ export default function ProviderDashboardLayout({
     }
   }, [user, router, hasHydrated, pathname]);
 
-  if (!hasHydrated || !user) return null;
+  if (!hasHydrated || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-slate-950">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-blue-600 border-t-transparent" />
+      </div>
+    );
+  }
 
   const navItems = [
     {

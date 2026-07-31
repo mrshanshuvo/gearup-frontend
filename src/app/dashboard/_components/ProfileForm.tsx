@@ -118,7 +118,9 @@ export default function ProfileForm() {
                     className={`h-28 w-28 rounded-full object-cover ring-4 ring-slate-100 transition-opacity duration-300 dark:ring-slate-800 ${uploadImage.isPending ? "opacity-40" : "opacity-100"}`}
                   />
                 ) : (
-                  <span className={`flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 text-4xl font-bold text-white ring-4 ring-slate-100 transition-opacity duration-300 dark:ring-slate-800 ${uploadImage.isPending ? "opacity-40" : "opacity-100"}`}>
+                  <span
+                    className={`flex h-28 w-28 items-center justify-center rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-4xl font-bold text-white ring-4 ring-slate-100 transition-opacity duration-300 dark:ring-slate-800 ${uploadImage.isPending ? "opacity-40" : "opacity-100"}`}
+                  >
                     {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
                   </span>
                 )}
@@ -271,7 +273,7 @@ export default function ProfileForm() {
                   <button
                     type="submit"
                     disabled={updateProfile.isPending || uploadImage.isPending}
-                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-2 text-sm font-semibold text-white transition-all hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-8 py-2 text-sm font-semibold text-white transition-all hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/50 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {updateProfile.isPending ? (
                       <>
