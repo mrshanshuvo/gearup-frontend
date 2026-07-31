@@ -44,7 +44,9 @@ export function StripePaymentModal({
         paymentIntentId: transactionId,
         rentalOrderId: orderId,
       });
-      toast.success("Payment completed successfully! Order status updated to PAID.");
+      toast.success(
+        "Payment completed successfully! Order status updated to PAID."
+      );
       onSuccess();
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Payment processing failed");
@@ -72,7 +74,7 @@ export function StripePaymentModal({
             variant="ghost"
             size="sm"
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 cursor-pointer"
+            className="cursor-pointer text-slate-400 hover:text-slate-600"
           >
             ✕
           </Button>
@@ -90,11 +92,19 @@ export function StripePaymentModal({
               inputMode="numeric"
               autoComplete="off"
               placeholder="4242 4242 4242 4242"
-              {...register("cardNumber")}
+              {...register("cardNumber", {
+                onChange: (e) => {
+                  const raw = e.target.value.replace(/\D/g, "").slice(0, 16);
+                  const formatted = raw.replace(/(\d{4})(?=\d)/g, "$1 ");
+                  e.target.value = formatted;
+                },
+              })}
               className={`font-mono text-sm ${errors.cardNumber ? "border-red-500" : ""}`}
             />
             {errors.cardNumber && (
-              <p className="text-[11px] text-red-500">{errors.cardNumber.message}</p>
+              <p className="text-[11px] text-red-500">
+                {errors.cardNumber.message}
+              </p>
             )}
           </div>
 
@@ -109,11 +119,22 @@ export function StripePaymentModal({
                 maxLength={5}
                 autoComplete="off"
                 placeholder="12/28"
-                {...register("cardExpiry")}
+                {...register("cardExpiry", {
+                  onChange: (e) => {
+                    const raw = e.target.value.replace(/\D/g, "").slice(0, 4);
+                    if (raw.length >= 3) {
+                      e.target.value = `${raw.slice(0, 2)}/${raw.slice(2)}`;
+                    } else {
+                      e.target.value = raw;
+                    }
+                  },
+                })}
                 className={`font-mono text-sm ${errors.cardExpiry ? "border-red-500" : ""}`}
               />
               {errors.cardExpiry && (
-                <p className="text-[11px] text-red-500">{errors.cardExpiry.message}</p>
+                <p className="text-[11px] text-red-500">
+                  {errors.cardExpiry.message}
+                </p>
               )}
             </div>
 
@@ -131,7 +152,9 @@ export function StripePaymentModal({
                 className={`font-mono text-sm ${errors.cardCvc ? "border-red-500" : ""}`}
               />
               {errors.cardCvc && (
-                <p className="text-[11px] text-red-500">{errors.cardCvc.message}</p>
+                <p className="text-[11px] text-red-500">
+                  {errors.cardCvc.message}
+                </p>
               )}
             </div>
           </div>
@@ -153,11 +176,12 @@ export function StripePaymentModal({
             <Button
               type="submit"
               disabled={isSubmitting || confirmPayment.isPending}
-              className="bg-blue-600 font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-700 cursor-pointer"
+              className="cursor-pointer bg-blue-600 font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-700"
             >
               {isSubmitting || confirmPayment.isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+                  Processing...
                 </>
               ) : (
                 `Pay $${totalCost}`
