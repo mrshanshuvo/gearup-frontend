@@ -27,24 +27,24 @@ export default function HomePage() {
   return (
     <div className="space-y-16 pb-16">
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-slate-900 px-4 py-24 text-white sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden bg-slate-100/80 px-4 py-24 text-slate-900 transition-colors sm:px-6 lg:px-8 dark:bg-slate-900 dark:text-white">
         <div className="relative z-10 mx-auto max-w-4xl text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-6xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-6xl dark:text-white">
             Rent Sports & Outdoor Gear <br />
-            <span className="text-rose-400">
+            <span className="text-primary font-black">
               Instantly & Effortlessly
             </span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-lg text-rose-100/90 sm:text-xl">
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-slate-600 sm:text-xl dark:text-slate-300">
             Browse top-quality outdoor, camping, and athletic equipment from
             trusted providers near you.
           </p>
 
-          <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
+          <div className="flex flex-col items-center justify-center gap-4 pt-6 sm:flex-row">
             <Button
               size="lg"
-              className="bg-primary px-8 font-bold text-white shadow-lg shadow-rose-500/30 hover:bg-rose-700"
+              className="bg-primary px-8 font-bold text-white shadow-lg shadow-rose-500/20 hover:bg-rose-700"
               onClick={() => (window.location.href = "/gear")}
             >
               Browse Gear Inventory{" "}
@@ -53,7 +53,7 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="border-white/40 bg-white/10 px-8 font-bold text-white hover:bg-white hover:text-slate-900 transition-all backdrop-blur-sm"
+              className="border-slate-300 bg-white px-8 font-bold text-slate-800 shadow-sm transition-all hover:bg-slate-100 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:hover:bg-slate-700"
               onClick={() => (window.location.href = "/auth/register?role=Provider")}
             >
               Become a Gear Provider
