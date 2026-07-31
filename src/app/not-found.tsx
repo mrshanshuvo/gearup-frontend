@@ -2,7 +2,6 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Home, Compass } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
@@ -33,19 +32,18 @@ export default function NotFound() {
         </div>
 
         <div className="flex flex-col items-center justify-center gap-3 pt-4 sm:flex-row">
-          <Button
-            className="bg-primary w-full font-bold text-white hover:bg-rose-700 sm:w-auto"
-            onClick={() => (window.location.href = "/")}
+          <Link
+            href="/"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-rose-600 px-5 py-2 text-sm font-bold text-white transition-colors hover:bg-rose-700 sm:w-auto"
           >
-            <Home className="mr-2 h-4 w-4" /> Return Home
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full font-medium sm:w-auto"
-            onClick={() => (window.location.href = "/gear")}
+            <Home className="h-4 w-4" /> Return Home
+          </Link>
+          <Link
+            href="/gear"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-5 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 sm:w-auto dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
           >
-            <Compass className="mr-2 h-4 w-4" /> Browse Inventory
-          </Button>
+            <Compass className="h-4 w-4" /> Browse Inventory
+          </Link>
         </div>
       </div>
     </div>
