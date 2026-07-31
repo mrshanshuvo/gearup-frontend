@@ -44,7 +44,7 @@ export default function HomePage() {
           <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
             <Button
               size="lg"
-              className="bg-primary px-8 font-bold text-primary-foreground shadow-lg shadow-rose-500/20 hover:bg-rose-700"
+              className="bg-primary px-8 font-bold text-white shadow-lg shadow-rose-500/30 hover:bg-rose-700"
               onClick={() => (window.location.href = "/gear")}
             >
               Browse Gear Inventory{" "}
@@ -53,8 +53,8 @@ export default function HomePage() {
             <Button
               size="lg"
               variant="outline"
-              className="border-white/30 px-8 font-medium text-white hover:bg-white/10"
-              onClick={() => (window.location.href = "/auth/register")}
+              className="border-white/40 bg-white/10 px-8 font-bold text-white hover:bg-white hover:text-slate-900 transition-all backdrop-blur-sm"
+              onClick={() => (window.location.href = "/auth/register?role=Provider")}
             >
               Become a Gear Provider
             </Button>
