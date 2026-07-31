@@ -137,6 +137,7 @@ export default function GearDetailPage({
               alt={gear.name}
               fill
               priority
+              unoptimized
               className="object-cover"
             />
           ) : (
