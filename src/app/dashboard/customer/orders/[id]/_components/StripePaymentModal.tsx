@@ -86,6 +86,9 @@ export function StripePaymentModal({
             </label>
             <Input
               type="text"
+              maxLength={19}
+              inputMode="numeric"
+              autoComplete="off"
               placeholder="4242 4242 4242 4242"
               {...register("cardNumber")}
               className={`font-mono text-sm ${errors.cardNumber ? "border-red-500" : ""}`}
@@ -103,6 +106,8 @@ export function StripePaymentModal({
               </label>
               <Input
                 type="text"
+                maxLength={5}
+                autoComplete="off"
                 placeholder="12/28"
                 {...register("cardExpiry")}
                 className={`font-mono text-sm ${errors.cardExpiry ? "border-red-500" : ""}`}
@@ -120,6 +125,7 @@ export function StripePaymentModal({
               <Input
                 type="password"
                 maxLength={4}
+                autoComplete="off"
                 placeholder="123"
                 {...register("cardCvc")}
                 className={`font-mono text-sm ${errors.cardCvc ? "border-red-500" : ""}`}
