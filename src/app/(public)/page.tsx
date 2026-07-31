@@ -3,7 +3,6 @@
 import React from "react";
 import { useCategories, useGearList } from "@/hooks/useGear";
 import { HeroSection } from "./_components/HeroSection";
-import { StatsSection } from "./_components/StatsSection";
 import { CategoryPillsSection } from "./_components/CategoryPillsSection";
 import { FeaturedGearSection } from "./_components/FeaturedGearSection";
 import { ProviderCtaSection } from "./_components/ProviderCtaSection";
@@ -25,7 +24,6 @@ export default function HomePage() {
   return (
     <div className="space-y-16 pb-16">
       <HeroSection />
-      <StatsSection />
       <CategoryPillsSection categories={categories} />
       <FeaturedGearSection gearItems={gearItems} gearLoading={gearLoading} />
       <ProviderCtaSection />
