@@ -28,15 +28,31 @@ export function proxy(request: NextRequest) {
   const isDashboardPage = pathname.startsWith("/dashboard");
 
   let userRole: string | null = null;
+  let isTokenValid = false;
   if (token) {
     const payload = decodeJwtPayload(token);
-    if (payload && payload.role) {
+    if (
+      payload &&
+      payload.role &&
+      payload.exp &&
+      payload.exp * 1000 > Date.now()
+    ) {
       userRole = payload.role;
+      isTokenValid = true;
     }
   }
 
+  // If token cookie exists but is invalid or expired, clear it
+  if (token && !isTokenValid) {
+    const response = isDashboardPage
+      ? NextResponse.redirect(new URL("/auth/login", request.url))
+      : NextResponse.next();
+    response.cookies.delete("accessToken");
+    return response;
+  }
+
   // Redirect authenticated users away from auth pages to their dashboard
-  if (isAuthPage && token && userRole) {
+  if (isAuthPage && token && isTokenValid && userRole) {
     let redirectPath = "/dashboard/customer";
     if (userRole === "Admin") redirectPath = "/dashboard/admin";
     if (userRole === "Provider") redirectPath = "/dashboard/provider";

@@ -66,8 +66,8 @@ export function useRegister() {
 export function useLogout() {
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
-  return () => {
-    authService.logout();
+  return async () => {
+    await authService.logout();
     clearAuth();
     toast.info("Logged out successfully");
     window.location.href = "/auth/login";

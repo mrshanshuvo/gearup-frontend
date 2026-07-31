@@ -44,7 +44,12 @@ export const authService = {
     return response.data;
   },
 
-  logout(): void {
+  async logout(): Promise<void> {
+    try {
+      await axiosInstance.post("/auth/logout");
+    } catch {
+      // Ignore network/auth errors during logout call
+    }
     Cookies.remove("accessToken", { path: "/" });
     Cookies.remove("accessToken");
     if (typeof document !== "undefined") {
