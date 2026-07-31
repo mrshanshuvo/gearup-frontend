@@ -7,22 +7,18 @@ import {
   ArrowLeft,
   Calendar,
   CreditCard,
-  CheckCircle2,
   ShieldCheck,
   Loader2,
   AlertCircle,
-  Clock,
-  User,
-  Mail,
   Tag,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
 import { useRentalDetail, useCancelRental } from "@/hooks/useRental";
-import { useCreatePaymentIntent, useConfirmPayment } from "@/hooks/usePayment";
+import { useCreatePaymentIntent } from "@/hooks/usePayment";
+import { StripePaymentModal } from "./_components/StripePaymentModal";
 import { toast } from "sonner";
 
 export default function OrderDetailPage({
@@ -34,18 +30,13 @@ export default function OrderDetailPage({
   const orderId = resolvedParams.id;
   const router = useRouter();
 
-  const { data: orderResponse, isLoading, isError } = useRentalDetail(orderId);
+  const { data: orderResponse, isLoading, isError, refetch } = useRentalDetail(orderId);
   const cancelRental = useCancelRental();
   const createPaymentIntent = useCreatePaymentIntent();
 
   const order = orderResponse?.data;
 
-  const confirmPayment = useConfirmPayment();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCvc, setCardCvc] = useState("");
-  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
   const [activeTransactionId, setActiveTransactionId] = useState("");
 
   const handlePayNow = async () => {
@@ -60,30 +51,6 @@ export default function OrderDetailPage({
       setShowPaymentModal(true);
     } catch (err: any) {
       toast.error(err.response?.data?.message || "Failed to initiate payment");
-    }
-  };
-
-  const handleCompleteCardPayment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!order) return;
-    if (!cardNumber || !cardExpiry || !cardCvc) {
-      toast.error("Please fill in all card details");
-      return;
-    }
-
-    try {
-      setIsProcessingPayment(true);
-      await confirmPayment.mutateAsync({
-        paymentIntentId: activeTransactionId,
-        rentalOrderId: order.id,
-      });
-      toast.success("Payment completed successfully! Order is now PAID.");
-      setShowPaymentModal(false);
-      window.location.reload();
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Payment processing failed");
-    } finally {
-      setIsProcessingPayment(false);
     }
   };
 
@@ -123,8 +90,17 @@ export default function OrderDetailPage({
 
   return (
     <div className="mx-auto max-w-5xl space-y-8 px-4 py-6 sm:px-6 lg:px-8">
+      {/* Back Button */}
+      <Button
+        variant="ghost"
+        onClick={() => router.push("/dashboard/customer/orders")}
+        className="flex cursor-pointer items-center gap-2 text-slate-600 dark:text-slate-400"
+      >
+        <ArrowLeft className="h-4 w-4" /> Back to My Orders
+      </Button>
+
       {/* Header Summary Box */}
-      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center dark:border-slate-800 dark:bg-slate-900">
+      <div className="flex flex-col justify-between gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-xs sm:flex-row sm:items-center dark:border-slate-800 dark:bg-slate-900">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">
@@ -270,112 +246,18 @@ export default function OrderDetailPage({
         </div>
       </div>
 
-      {/* Stripe Interactive Card Payment Modal */}
+      {/* Stripe Payment Modal Component */}
       {showPaymentModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md space-y-6 rounded-3xl border border-slate-200 bg-white p-6 shadow-2xl dark:border-slate-800 dark:bg-slate-900">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-4 dark:border-slate-800">
-              <div className="flex items-center gap-2">
-                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-100 text-blue-600 dark:bg-blue-950 dark:text-blue-400">
-                  <CreditCard className="h-5 w-5" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 dark:text-white">
-                    Stripe Card Checkout
-                  </h3>
-                  <p className="text-[11px] text-slate-500">
-                    Order #{order.id.substring(0, 8)} • ${order.totalCost}
-                  </p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setShowPaymentModal(false)}
-                className="text-slate-400 hover:text-slate-600"
-              >
-                ✕
-              </Button>
-            </div>
-
-            <form onSubmit={handleCompleteCardPayment} className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                  Card Number
-                </label>
-                <Input
-                  type="text"
-                  placeholder="4242 •••• •••• 4242"
-                  value={cardNumber}
-                  onChange={(e) => setCardNumber(e.target.value)}
-                  className="font-mono text-sm"
-                  required
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    Expiry Date
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="MM / YY"
-                    value={cardExpiry}
-                    onChange={(e) => setCardExpiry(e.target.value)}
-                    className="font-mono text-sm"
-                    required
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                    CVC / CVV
-                  </label>
-                  <Input
-                    type="password"
-                    maxLength={4}
-                    placeholder="123"
-                    value={cardCvc}
-                    onChange={(e) => setCardCvc(e.target.value)}
-                    className="font-mono text-sm"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 rounded-xl bg-slate-50 p-3 text-[11px] text-slate-500 dark:bg-slate-950">
-                <ShieldCheck className="h-4 w-4 shrink-0 text-emerald-500" />
-                <span>
-                  256-Bit SSL Encrypted & PCI-DSS Compliant via Stripe
-                </span>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setShowPaymentModal(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={isProcessingPayment}
-                  className="bg-blue-600 font-bold text-white shadow-md shadow-blue-500/20 hover:bg-blue-700"
-                >
-                  {isProcessingPayment ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
-                      Processing...
-                    </>
-                  ) : (
-                    `Pay $${order.totalCost}`
-                  )}
-                </Button>
-              </div>
-            </form>
-          </div>
-        </div>
+        <StripePaymentModal
+          orderId={order.id}
+          totalCost={order.totalCost}
+          transactionId={activeTransactionId}
+          onClose={() => setShowPaymentModal(false)}
+          onSuccess={() => {
+            setShowPaymentModal(false);
+            refetch();
+          }}
+        />
       )}
     </div>
   );
