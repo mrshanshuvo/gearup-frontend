@@ -309,9 +309,9 @@ export default function GearDetailPage({
           </div>
         </div>
 
-        {gear.reviews && gear.reviews.length > 0 ? (
+        {(gear as any).reviews && (gear as any).reviews.length > 0 ? (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {gear.reviews.map((rev: any, idx: number) => (
+            {(gear as any).reviews.map((rev: any, idx: number) => (
               <Card key={rev.id || idx} className="border-slate-200 dark:border-slate-800">
                 <CardContent className="p-5 space-y-3">
                   <div className="flex items-center justify-between">

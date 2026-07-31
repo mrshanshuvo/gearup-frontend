@@ -76,16 +76,54 @@ function BrowseGearContent() {
     router.push("/gear");
   };
 
+  // Client-side sorting state
+  const [sortOption, setSortOption] = useState<string>("featured");
+
+  // Filter and sort items
+  const sortedGearItems = React.useMemo(() => {
+    let items = [...gearItems];
+    if (sortOption === "price-low") {
+      items.sort((a, b) => a.pricePerDay - b.pricePerDay);
+    } else if (sortOption === "price-high") {
+      items.sort((a, b) => b.pricePerDay - a.pricePerDay);
+    } else if (sortOption === "name-asc") {
+      items.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (sortOption === "newest") {
+      items.sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime());
+    }
+    return items;
+  }, [gearItems, sortOption]);
+
   return (
     <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
       {/* Header Banner */}
-      <div className="space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-          Browse Equipment Inventory
-        </h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">
-          Find available outdoor and sports gear for your next adventure.
-        </p>
+      <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-center dark:border-slate-800">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+            Browse Equipment Inventory
+          </h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Find available outdoor and sports gear for your next adventure.
+          </p>
+        </div>
+
+        {/* Live Active Results & Sort Bar */}
+        <div className="flex items-center gap-3">
+          <span className="text-xs font-semibold text-slate-500 whitespace-nowrap">
+            Showing <strong className="text-slate-900 dark:text-white">{sortedGearItems.length}</strong> items
+          </span>
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 shadow-xs outline-none dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
+          >
+            <option value="featured">Sort: Featured</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="newest">Newest Listed</option>
+            <option value="name-asc">Name: A to Z</option>
+          </select>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-4">
@@ -100,7 +138,7 @@ function BrowseGearContent() {
               variant="ghost"
               size="sm"
               onClick={clearFilters}
-              className="gap-1 text-xs text-slate-500 hover:text-red-500"
+              className="gap-1 text-xs text-slate-500 hover:text-red-500 cursor-pointer"
             >
               <RotateCcw className="h-3.5 w-3.5" /> Reset
             </Button>
@@ -114,7 +152,7 @@ function BrowseGearContent() {
             <div className="relative">
               <Input
                 type="text"
-                placeholder="e.g. Black Diamond"
+                placeholder="e.g. Black Diamond, Trek"
                 value={brandSearch}
                 onChange={(e) => setBrandSearch(e.target.value)}
                 className="pr-8"
@@ -150,14 +188,14 @@ function BrowseGearContent() {
             <div className="flex items-center gap-2">
               <Input
                 type="number"
-                placeholder="Min"
+                placeholder="Min $"
                 value={minPrice}
                 onChange={(e) => setMinPrice(e.target.value)}
               />
               <span className="text-slate-400">-</span>
               <Input
                 type="number"
-                placeholder="Max"
+                placeholder="Max $"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
               />
@@ -173,13 +211,13 @@ function BrowseGearContent() {
               type="checkbox"
               checked={availableOnly}
               onChange={(e) => setAvailableOnly(e.target.checked)}
-              className="h-4 w-4 rounded accent-rose-600"
+              className="h-4 w-4 rounded accent-rose-600 cursor-pointer"
             />
           </div>
 
           <Button
             onClick={applyFilters}
-            className="w-full bg-primary text-primary-foreground hover:bg-rose-700 font-bold"
+            className="w-full bg-primary text-primary-foreground hover:bg-rose-700 font-bold cursor-pointer"
           >
             Apply Filters
           </Button>
@@ -193,22 +231,26 @@ function BrowseGearContent() {
                 <GearSkeleton key={i} />
               ))}
             </div>
-          ) : gearItems.length === 0 ? (
-            <div className="space-y-3 rounded-2xl border border-slate-200 bg-white py-16 text-center dark:border-slate-800 dark:bg-slate-900">
-              <p className="text-lg font-bold text-slate-700 dark:text-slate-300">
-                No Gear Found
-              </p>
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                Try adjusting your search filters or clear them to see all
-                equipment.
-              </p>
-              <Button variant="outline" onClick={clearFilters}>
-                Clear Filters
+          ) : sortedGearItems.length === 0 ? (
+            <div className="space-y-4 rounded-2xl border border-slate-200 bg-white py-20 px-4 text-center dark:border-slate-800 dark:bg-slate-900">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-rose-50 text-rose-500 dark:bg-rose-950 dark:text-rose-400">
+                <Filter className="h-8 w-8" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-xl font-extrabold text-slate-900 dark:text-slate-100">
+                  No Equipment Matches Your Filters
+                </p>
+                <p className="mx-auto max-w-sm text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                  We couldn't find any gear matching your current search parameters. Try expanding your price range or clearing keyword filters.
+                </p>
+              </div>
+              <Button variant="outline" onClick={clearFilters} className="font-bold">
+                <RotateCcw className="mr-2 h-4 w-4" /> Reset All Filters
               </Button>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {gearItems.map((gear) => (
+              {sortedGearItems.map((gear) => (
                 <GearCard key={gear.id} gear={gear} />
               ))}
             </div>
