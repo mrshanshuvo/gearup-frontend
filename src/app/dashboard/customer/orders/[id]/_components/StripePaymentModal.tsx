@@ -91,7 +91,7 @@ export function StripePaymentModal({
               maxLength={19}
               inputMode="numeric"
               autoComplete="off"
-              placeholder="4242 4242 4242 4242"
+              placeholder="1234 5678 9101 1121"
               {...register("cardNumber", {
                 onChange: (e) => {
                   const raw = e.target.value.replace(/\D/g, "").slice(0, 16);
@@ -118,7 +118,7 @@ export function StripePaymentModal({
                 type="text"
                 maxLength={5}
                 autoComplete="off"
-                placeholder="12/28"
+                placeholder="MM / YY"
                 {...register("cardExpiry", {
                   onChange: (e) => {
                     let raw = e.target.value.replace(/\D/g, "").slice(0, 4);
@@ -154,7 +154,7 @@ export function StripePaymentModal({
                 type="password"
                 maxLength={4}
                 autoComplete="off"
-                placeholder="123"
+                placeholder="CVC"
                 {...register("cardCvc")}
                 className={`font-mono text-sm ${errors.cardCvc ? "border-red-500" : ""}`}
               />
