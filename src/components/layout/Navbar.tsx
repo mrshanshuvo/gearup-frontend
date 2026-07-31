@@ -40,6 +40,7 @@ export function Navbar() {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
 
   const user = useAuthStore((state) => state.user);
   const logout = useLogout();
@@ -120,43 +121,48 @@ export function Navbar() {
             <ShoppingBag className="h-4 w-4" /> Browse Gear
           </Link>
 
-          {/* shadcn DropdownMenu for Categories */}
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary outline-none cursor-pointer">
-              <Tag className="h-4 w-4 text-primary" /> Categories{" "}
-              <ChevronDown className="h-3.5 w-3.5 opacity-70" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start" className="w-56">
-              <DropdownMenuLabel className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                <Sparkles className="h-3.5 w-3.5 text-primary" /> Popular Equipment
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {categories.length === 0 ? (
-                <div className="p-2 text-center text-xs text-muted-foreground">
-                  Loading categories...
-                </div>
-              ) : (
-                categories.map((cat) => (
-                  <DropdownMenuItem
-                    key={cat.id}
-                    onClick={() => (window.location.href = `/gear?categoryId=${cat.id}`)}
-                    className="flex cursor-pointer items-center justify-between font-medium"
-                  >
-                    <span>{cat.name}</span>
-                    <Badge variant="outline" className="text-[10px] uppercase">
-                      Gear
-                    </Badge>
-                  </DropdownMenuItem>
-                ))
-              )}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => (window.location.href = "/gear")}
-                className="flex cursor-pointer items-center justify-center font-bold text-primary"
-              >
-                View All Categories →
-              </DropdownMenuItem>
-            </DropdownMenuContent>
+          {/* shadcn DropdownMenu for Categories (Hover Triggered) */}
+          <DropdownMenu open={isCategoryOpen} onOpenChange={setIsCategoryOpen}>
+            <div
+              onMouseEnter={() => setIsCategoryOpen(true)}
+              onMouseLeave={() => setIsCategoryOpen(false)}
+            >
+              <DropdownMenuTrigger className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-primary outline-none cursor-pointer">
+                <Tag className="h-4 w-4 text-primary" /> Categories{" "}
+                <ChevronDown className="h-3.5 w-3.5 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuLabel className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Sparkles className="h-3.5 w-3.5 text-primary" /> Popular Equipment
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {categories.length === 0 ? (
+                  <div className="p-2 text-center text-xs text-muted-foreground">
+                    Loading categories...
+                  </div>
+                ) : (
+                  categories.map((cat) => (
+                    <DropdownMenuItem
+                      key={cat.id}
+                      onClick={() => (window.location.href = `/gear?categoryId=${cat.id}`)}
+                      className="flex cursor-pointer items-center justify-between font-medium"
+                    >
+                      <span>{cat.name}</span>
+                      <Badge variant="outline" className="text-[10px] uppercase">
+                        Gear
+                      </Badge>
+                    </DropdownMenuItem>
+                  ))
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  onClick={() => (window.location.href = "/gear")}
+                  className="flex cursor-pointer items-center justify-center font-bold text-primary"
+                >
+                  View All Categories →
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </div>
           </DropdownMenu>
 
           {/* How It Works Link */}
