@@ -1,9 +1,8 @@
 "use client";
 
 import React from "react";
-import { useCategories, useGearList } from "@/hooks/useGear";
+import { useGearList } from "@/hooks/useGear";
 import { HeroSection } from "./_components/HeroSection";
-import { CategoryPillsSection } from "./_components/CategoryPillsSection";
 import { FeaturedGearSection } from "./_components/FeaturedGearSection";
 import { ProviderCtaSection } from "./_components/ProviderCtaSection";
 import { HowItWorksSection } from "./_components/HowItWorksSection";
@@ -16,15 +15,12 @@ export default function HomePage() {
     availableOnly: true,
     limit: 8,
   });
-  const { data: categoryData } = useCategories();
 
   const gearItems = gearData?.data || [];
-  const categories = categoryData?.data || [];
 
   return (
     <div className="space-y-16 pb-16">
       <HeroSection />
-      <CategoryPillsSection categories={categories} />
       <FeaturedGearSection gearItems={gearItems} gearLoading={gearLoading} />
       <ProviderCtaSection />
       <HowItWorksSection />
