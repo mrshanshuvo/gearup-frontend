@@ -4,14 +4,24 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Loader2, Calendar, ShoppingBag, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
-import { useCustomerRentals } from "@/hooks/useRental";
+import { useCustomerRentals, useCancelRental } from "@/hooks/useRental";
+import { toast } from "sonner";
 
 export default function MyOrdersPage() {
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const { data: rentalsData, isLoading } = useCustomerRentals();
+  const cancelRental = useCancelRental();
   const rentals = rentalsData?.data || [];
+
+  const handleCancelOrder = async (id: string) => {
+    try {
+      await cancelRental.mutateAsync(id);
+      toast.success("Rental order cancelled successfully");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to cancel order");
+    }
+  };
 
   const filteredRentals =
     statusFilter === "ALL"
@@ -139,14 +149,27 @@ export default function MyOrdersPage() {
                       </p>
                     </div>
 
-                    <Button
-                      onClick={() =>
-                        (window.location.href = `/dashboard/customer/orders/${order.id}`)
-                      }
-                      className="bg-slate-900 text-white font-bold hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900"
-                    >
-                      View Details <ArrowRight className="ml-1 inline h-4 w-4" />
-                    </Button>
+                    <div className="flex items-center gap-2">
+                      {order.status === "PLACED" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          disabled={cancelRental.isPending}
+                          onClick={() => handleCancelOrder(order.id)}
+                          className="border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/50 dark:hover:bg-red-950/50 cursor-pointer font-bold"
+                        >
+                          Cancel Order
+                        </Button>
+                      )}
+                      <Button
+                        onClick={() =>
+                          (window.location.href = `/dashboard/customer/orders/${order.id}`)
+                        }
+                        className="bg-slate-900 text-white font-bold hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 cursor-pointer"
+                      >
+                        View Details <ArrowRight className="ml-1 inline h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 </div>
 
