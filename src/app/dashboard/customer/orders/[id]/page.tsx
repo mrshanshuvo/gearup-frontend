@@ -49,13 +49,14 @@ export default function OrderDetailPage({
     try {
       const res = await createPaymentIntent.mutateAsync(order.id);
       const transactionId =
-        (res.data as any)?.transactionId ||
-        (res.data as any)?.paymentIntentId ||
-        `mock_tx_${Date.now()}`;
+        res.data?.transactionId ||
+        res.data?.paymentIntentId ||
+        "mock_tx_pending";
       setActiveTransactionId(transactionId);
       setShowPaymentModal(true);
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to initiate payment");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Failed to initiate payment");
     }
   };
 
@@ -64,8 +65,9 @@ export default function OrderDetailPage({
     try {
       await cancelRental.mutateAsync(order.id);
       toast.success("Order cancelled successfully");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to cancel order");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Failed to cancel order");
     }
   };
 
@@ -83,7 +85,7 @@ export default function OrderDetailPage({
         <AlertCircle className="mx-auto h-12 w-12 text-red-500" />
         <h1 className="text-2xl font-bold">Order Not Found</h1>
         <p className="text-slate-500">
-          The requested rental order could not be located or you don't have
+          The requested rental order could not be located or you don&apos;t have
           access.
         </p>
         <Button onClick={() => router.push("/dashboard/customer/orders")}>

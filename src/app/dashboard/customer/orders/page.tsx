@@ -38,10 +38,13 @@ export default function MyOrdersPage() {
       const transactionId =
         res.data?.transactionId ||
         res.data?.paymentIntentId ||
-        `mock_tx_${Date.now()}`;
+        "mock_tx_pending";
       setActivePaymentOrder({ id: orderId, totalCost, transactionId });
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to initiate payment");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(
+        error.response?.data?.message || "Failed to initiate payment"
+      );
     }
   };
 
@@ -49,8 +52,9 @@ export default function MyOrdersPage() {
     try {
       await cancelRental.mutateAsync(id);
       toast.success("Rental order cancelled successfully");
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Failed to cancel order");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Failed to cancel order");
     }
   };
 
@@ -137,7 +141,7 @@ export default function MyOrdersPage() {
             No Rental Orders Found
           </p>
           <p className="mx-auto max-w-sm text-xs text-slate-500">
-            You don't have any orders under the selected filter tab.
+            You don&apos;t have any orders under the selected filter tab.
           </p>
           <Button
             onClick={() => (window.location.href = "/gear")}

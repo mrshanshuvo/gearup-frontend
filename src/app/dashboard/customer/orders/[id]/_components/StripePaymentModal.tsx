@@ -49,8 +49,9 @@ export function StripePaymentModal({
         "Payment completed successfully! Order status updated to PAID."
       );
       onSuccess();
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || "Payment processing failed");
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Payment processing failed");
     }
   };
 
@@ -122,7 +123,7 @@ export function StripePaymentModal({
                 placeholder="MM / YY"
                 {...register("cardExpiry", {
                   onChange: (e) => {
-                    let raw = e.target.value.replace(/\D/g, "").slice(0, 4);
+                    const raw = e.target.value.replace(/\D/g, "").slice(0, 4);
                     if (raw.length >= 2) {
                       let month = parseInt(raw.slice(0, 2), 10);
                       if (month > 12) month = 12;
