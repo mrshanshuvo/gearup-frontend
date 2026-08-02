@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreditCard, ShieldCheck, Loader2, Eye, EyeOff } from "lucide-react";
@@ -28,6 +29,7 @@ export function StripePaymentModal({
   onClose,
   onSuccess,
 }: StripePaymentModalProps) {
+  const router = useRouter();
   const [showCvc, setShowCvc] = React.useState(false);
   const confirmPayment = useConfirmPayment();
 
@@ -46,13 +48,19 @@ export function StripePaymentModal({
         rentalOrderId: orderId,
       });
       toast.success(
-        "Payment completed successfully! Order status updated to PAID."
+        "Payment completed successfully! Redirecting to confirmation page..."
       );
       onSuccess();
+      router.push(`/payment/success?orderId=${orderId}`);
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       toast.error(error.response?.data?.message || "Payment processing failed");
     }
+  };
+
+  const handleCancelClick = () => {
+    onClose();
+    router.push(`/payment/cancel?orderId=${orderId}`);
   };
 
   return (
@@ -75,7 +83,7 @@ export function StripePaymentModal({
           <Button
             variant="ghost"
             size="sm"
-            onClick={onClose}
+            onClick={handleCancelClick}
             className="cursor-pointer text-slate-400 hover:text-slate-600"
           >
             ✕
@@ -159,12 +167,12 @@ export function StripePaymentModal({
                   autoComplete="off"
                   placeholder="CVC"
                   {...register("cardCvc")}
-                  className={`font-mono text-sm pr-9 ${errors.cardCvc ? "border-red-500" : ""}`}
+                  className={`pr-9 font-mono text-sm ${errors.cardCvc ? "border-red-500" : ""}`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowCvc(!showCvc)}
-                  className="absolute top-1/2 right-2.5 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                  className="absolute top-1/2 right-2.5 -translate-y-1/2 cursor-pointer text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                 >
                   {showCvc ? (
                     <EyeOff className="h-4 w-4" />
@@ -190,7 +198,7 @@ export function StripePaymentModal({
             <Button
               type="button"
               variant="outline"
-              onClick={onClose}
+              onClick={handleCancelClick}
               className="cursor-pointer"
             >
               Cancel

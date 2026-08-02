@@ -56,7 +56,9 @@ export default function OrderDetailPage({
       setShowPaymentModal(true);
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
-      toast.error(error.response?.data?.message || "Failed to initiate payment");
+      toast.error(
+        error.response?.data?.message || "Failed to initiate payment"
+      );
     }
   };
 
@@ -112,16 +114,18 @@ export default function OrderDetailPage({
         </div>
 
         <div className="flex items-center gap-3">
-          {order.status === "PLACED" && (
+          {(order.status === "PLACED" || order.status === "CONFIRMED") && (
             <>
-              <Button
-                variant="outline"
-                disabled={cancelRental.isPending}
-                onClick={handleCancel}
-                className="cursor-pointer border-red-200 font-bold text-red-600 hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-950/50"
-              >
-                Cancel Order
-              </Button>
+              {order.status === "PLACED" && (
+                <Button
+                  variant="outline"
+                  disabled={cancelRental.isPending}
+                  onClick={handleCancel}
+                  className="cursor-pointer border-red-200 font-bold text-red-600 hover:bg-red-50 dark:border-red-900/50 dark:hover:bg-red-950/50"
+                >
+                  Cancel Order
+                </Button>
+              )}
               <Button
                 disabled={createPaymentIntent.isPending}
                 onClick={handlePayNow}

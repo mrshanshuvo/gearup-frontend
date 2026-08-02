@@ -168,33 +168,32 @@ export default function MyOrdersPage() {
                   </div>
 
                   <div className="flex items-center gap-2">
+                    {(order.status === "PLACED" ||
+                      order.status === "CONFIRMED") && (
+                      <Button
+                        size="sm"
+                        disabled={createPaymentIntent.isPending}
+                        onClick={() => handlePayNow(order.id, order.totalCost)}
+                        className="cursor-pointer bg-blue-600 font-bold text-white shadow-sm hover:bg-blue-700"
+                      >
+                        {createPaymentIntent.isPending ? (
+                          <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <CreditCard className="mr-1.5 h-3.5 w-3.5" />
+                        )}
+                        Pay Now
+                      </Button>
+                    )}
                     {order.status === "PLACED" && (
-                      <>
-                        <Button
-                          size="sm"
-                          disabled={createPaymentIntent.isPending}
-                          onClick={() =>
-                            handlePayNow(order.id, order.totalCost)
-                          }
-                          className="cursor-pointer bg-blue-600 font-bold text-white shadow-sm hover:bg-blue-700"
-                        >
-                          {createPaymentIntent.isPending ? (
-                            <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
-                          ) : (
-                            <CreditCard className="mr-1.5 h-3.5 w-3.5" />
-                          )}
-                          Pay Now
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          disabled={cancelRental.isPending}
-                          onClick={() => handleCancelOrder(order.id)}
-                          className="cursor-pointer border-red-200 font-bold text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/50 dark:hover:bg-red-950/50"
-                        >
-                          Cancel Order
-                        </Button>
-                      </>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        disabled={cancelRental.isPending}
+                        onClick={() => handleCancelOrder(order.id)}
+                        className="cursor-pointer border-red-200 font-bold text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/50 dark:hover:bg-red-950/50"
+                      >
+                        Cancel Order
+                      </Button>
                     )}
                     <Button
                       size="sm"
