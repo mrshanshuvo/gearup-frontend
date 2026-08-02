@@ -37,7 +37,15 @@ export default function MyOrdersPage() {
     gearName?: string;
   } | null>(null);
 
+  const [processingPaymentOrderId, setProcessingPaymentOrderId] = useState<
+    string | null
+  >(null);
+  const [processingCancelOrderId, setProcessingCancelOrderId] = useState<
+    string | null
+  >(null);
+
   const handlePayNow = async (orderId: string, totalCost: number) => {
+    setProcessingPaymentOrderId(orderId);
     try {
       const res = await createPaymentIntent.mutateAsync(orderId);
       const transactionId =
@@ -50,16 +58,21 @@ export default function MyOrdersPage() {
       toast.error(
         error.response?.data?.message || "Failed to initiate payment"
       );
+    } finally {
+      setProcessingPaymentOrderId(null);
     }
   };
 
   const handleCancelOrder = async (id: string) => {
+    setProcessingCancelOrderId(id);
     try {
       await cancelRental.mutateAsync(id);
       toast.success("Rental order cancelled successfully");
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       toast.error(error.response?.data?.message || "Failed to cancel order");
+    } finally {
+      setProcessingCancelOrderId(null);
     }
   };
 
@@ -182,7 +195,8 @@ export default function MyOrdersPage() {
                         onClick={() => handlePayNow(order.id, order.totalCost)}
                         className="cursor-pointer bg-blue-600 font-bold text-white shadow-sm hover:bg-blue-700"
                       >
-                        {createPaymentIntent.isPending ? (
+                        {createPaymentIntent.isPending &&
+                        processingPaymentOrderId === order.id ? (
                           <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
                         ) : (
                           <CreditCard className="mr-1.5 h-3.5 w-3.5" />
@@ -198,6 +212,10 @@ export default function MyOrdersPage() {
                         onClick={() => handleCancelOrder(order.id)}
                         className="cursor-pointer border-red-200 font-bold text-red-600 hover:bg-red-50 hover:text-red-700 dark:border-red-900/50 dark:hover:bg-red-950/50"
                       >
+                        {cancelRental.isPending &&
+                        processingCancelOrderId === order.id ? (
+                          <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" />
+                        ) : null}
                         Cancel Order
                       </Button>
                     )}
