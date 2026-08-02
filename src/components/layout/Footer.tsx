@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ShieldCheck, Mail, Phone, MapPin, Heart } from "lucide-react";
+import { ShieldCheck, Mail, Phone, MapPin } from "lucide-react";
 
 export function Footer() {
   return (
@@ -62,7 +62,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/gear?categoryId=1"
+                  href="/gear"
                   className="transition-colors hover:text-white"
                 >
                   Popular Categories
@@ -117,14 +117,24 @@ export function Footer() {
             <h3 className="text-xs font-bold tracking-wider text-slate-200 uppercase">
               Support & Contact
             </h3>
-            <ul className="space-y-2.5 text-xs">
-              <li className="flex items-center gap-2 text-slate-400">
-                <Mail className="h-3.5 w-3.5 text-rose-500" />{" "}
-                support@gearup.app
+            <ul className="space-y-2 text-xs font-medium">
+              <li>
+                <a
+                  href="mailto:support@gearup.app"
+                  className="flex items-center gap-2 text-slate-400 transition-colors hover:text-white"
+                >
+                  <Mail className="h-3.5 w-3.5 text-rose-500" />{" "}
+                  support@gearup.app
+                </a>
               </li>
-              <li className="flex items-center gap-2 text-slate-400">
-                <Phone className="h-3.5 w-3.5 text-rose-500" /> +1 (800)
-                555-GEAR
+              <li>
+                <a
+                  href="tel:18005554327"
+                  className="flex items-center gap-2 text-slate-400 transition-colors hover:text-white"
+                >
+                  <Phone className="h-3.5 w-3.5 text-rose-500" /> +1 (800)
+                  555-GEAR
+                </a>
               </li>
               <li className="flex items-start gap-2 text-slate-400">
                 <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-rose-500" />{" "}
@@ -137,18 +147,25 @@ export function Footer() {
         {/* Bottom Sub-Footer Bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-slate-800/80 pt-6 text-xs text-slate-500 md:flex-row">
           <p className="flex items-center gap-1">
-            &copy; {new Date().getFullYear()} GearUp Rental Inc. Crafted with{" "}
-            <Heart className="inline h-3 w-3 fill-rose-500 text-rose-500" /> for
-            outdoor explorers.
+            &copy; {new Date().getFullYear()} GearUp Rental Inc.
           </p>
           <div className="flex items-center gap-6 font-medium">
-            <Link href="/" className="transition-colors hover:text-slate-300">
+            <Link
+              href="/privacy"
+              className="transition-colors hover:text-slate-300"
+            >
               Privacy Policy
             </Link>
-            <Link href="/" className="transition-colors hover:text-slate-300">
+            <Link
+              href="/terms"
+              className="transition-colors hover:text-slate-300"
+            >
               Terms of Service
             </Link>
-            <Link href="/" className="transition-colors hover:text-slate-300">
+            <Link
+              href="/terms#cookies"
+              className="transition-colors hover:text-slate-300"
+            >
               Cookie Policy
             </Link>
           </div>

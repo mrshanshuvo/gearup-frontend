@@ -20,6 +20,7 @@ import {
   PlusCircle,
   HelpCircle,
   ShoppingBag,
+  Mail,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -200,6 +201,18 @@ export function Navbar() {
             <HelpCircle className="h-4 w-4" /> How It Works
           </Link>
 
+          {/* Contact Support Link */}
+          <Link
+            href="/contact"
+            className={`hover:text-primary flex items-center gap-1 text-sm font-medium transition-colors ${
+              pathname === "/contact"
+                ? "text-primary font-bold"
+                : "text-muted-foreground"
+            }`}
+          >
+            <Mail className="h-4 w-4" /> Contact
+          </Link>
+
           {/* List Your Gear CTA pill for Providers */}
           <Link
             href={
@@ -344,6 +357,13 @@ export function Navbar() {
               className="hover:text-primary px-2 py-1.5 text-sm font-medium"
             >
               How It Works
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="hover:text-primary flex items-center gap-1.5 px-2 py-1.5 text-sm font-medium"
+            >
+              <Mail className="h-4 w-4" /> Contact Support
             </Link>
             <Link
               href={
