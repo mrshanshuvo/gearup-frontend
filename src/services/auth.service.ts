@@ -15,9 +15,10 @@ export const authService = {
       data
     );
     if (response.data.data?.accessToken) {
-      // Sync cookie for Next.js Middleware
+      // Sync cookie for Next.js Middleware with explicit path='/'
       Cookies.set("accessToken", response.data.data.accessToken, {
         expires: 7,
+        path: "/",
       });
     }
     return response.data;
@@ -44,7 +45,26 @@ export const authService = {
     return response.data;
   },
 
-  logout(): void {
+  async logout(): Promise<void> {
+    try {
+      await axiosInstance.post("/auth/logout");
+    } catch {
+      // Ignore network/auth errors during logout call
+    }
+
+    // Remove cookies across all possible path variations
+    Cookies.remove("accessToken", { path: "/" });
     Cookies.remove("accessToken");
+    Cookies.remove("refreshToken", { path: "/" });
+    Cookies.remove("refreshToken");
+
+    if (typeof document !== "undefined") {
+      document.cookie =
+        "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      document.cookie =
+        "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    }
   },
 };

@@ -3,11 +3,15 @@ import { ApiResponse, Payment } from "@/types";
 
 export interface CreatePaymentIntentResponse {
   clientSecret: string;
-  paymentIntentId: string;
+  transactionId: string;
+  amount: number;
+  paymentId: string;
+  paymentIntentId?: string;
 }
 
 export interface ConfirmPaymentPayload {
-  paymentIntentId: string;
+  paymentIntentId?: string;
+  transactionId?: string;
   rentalOrderId: string;
 }
 
@@ -28,7 +32,10 @@ export const paymentService = {
   ): Promise<ApiResponse<Payment>> {
     const response = await axiosInstance.post<ApiResponse<Payment>>(
       "/payments/confirm",
-      payload
+      {
+        transactionId: payload.transactionId || payload.paymentIntentId,
+        rentalOrderId: payload.rentalOrderId,
+      }
     );
     return response.data;
   },

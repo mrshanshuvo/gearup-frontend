@@ -37,9 +37,10 @@ export default function AddGearPage() {
       await createGear.mutateAsync(data);
       toast.success("Equipment item listed successfully!");
       router.push("/dashboard/provider/gear");
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       toast.error(
-        err.response?.data?.message || "Failed to create gear listing"
+        error.response?.data?.message || "Failed to create gear listing"
       );
     }
   };

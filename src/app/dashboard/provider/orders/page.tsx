@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
 import {
   useProviderOrders,
   useUpdateOrderStatus,
@@ -44,38 +45,11 @@ export default function IncomingOrdersPage() {
     try {
       await updateStatus.mutateAsync({ id, status: newStatus });
       toast.success(`Order status updated to ${newStatus}`);
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const error = err as { response?: { data?: { message?: string } } };
       toast.error(
-        err.response?.data?.message || "Failed to update order status"
+        error.response?.data?.message || "Failed to update order status"
       );
-    }
-  };
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "PLACED":
-        return (
-          <Badge className="bg-amber-500 text-white">Pending Action</Badge>
-        );
-      case "CONFIRMED":
-        return <Badge className="bg-blue-500 text-white">Confirmed</Badge>;
-      case "PAID":
-        return <Badge className="bg-purple-500 text-white">Paid</Badge>;
-      case "PICKED_UP":
-        return <Badge className="bg-emerald-600 text-white">Picked Up</Badge>;
-      case "RETURNED":
-        return (
-          <Badge
-            variant="outline"
-            className="border-emerald-600 text-emerald-600"
-          >
-            Returned
-          </Badge>
-        );
-      case "CANCELLED":
-        return <Badge variant="destructive">Cancelled</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
     }
   };
 
@@ -151,13 +125,13 @@ export default function IncomingOrdersPage() {
                     <h3 className="text-base font-bold text-slate-900 dark:text-slate-100">
                       {order.gearItem?.name}
                     </h3>
-                    {getStatusBadge(order.status)}
+                    <RentalStatusBadge status={order.status} />
                   </div>
                   <p className="text-xs text-slate-600 dark:text-slate-400">
                     Customer: <strong>{order.customer?.name}</strong> (
                     {order.customer?.email})
                   </p>
-                  <p className="flex items-center gap-1 text-xs text-slate-500">
+                  <p className="flex items-center gap-1 text-xs font-medium text-slate-500">
                     <Calendar className="h-3.5 w-3.5 text-blue-600" />
                     {new Date(order.startDate).toLocaleDateString()} -{" "}
                     {new Date(order.endDate).toLocaleDateString()}
@@ -169,7 +143,7 @@ export default function IncomingOrdersPage() {
               <div className="flex w-full items-center justify-between gap-4 border-t border-slate-100 pt-4 sm:w-auto sm:justify-end sm:border-t-0 sm:pt-0 dark:border-slate-800">
                 <div className="text-left sm:text-right">
                   <p className="text-xs text-slate-500">Order Cost</p>
-                  <p className="text-xl font-extrabold text-emerald-600 dark:text-emerald-400">
+                  <p className="text-xl font-black text-blue-600 dark:text-blue-400">
                     ${order.totalCost}
                   </p>
                 </div>

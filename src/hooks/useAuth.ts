@@ -16,6 +16,9 @@ export function useLogin() {
         const { accessToken } = res.data;
 
         try {
+          // Immediately store token so axiosInstance request interceptor attaches Bearer token to getMe()
+          useAuthStore.getState().setAccessToken(accessToken);
+
           const profileRes = await authService.getMe();
           if (profileRes.success && profileRes.data) {
             setAuth(profileRes.data, accessToken);
@@ -33,15 +36,17 @@ export function useLogin() {
                 break;
             }
           }
-        } catch (err: any) {
+        } catch (err: unknown) {
+          const error = err as { response?: { data?: { message?: string } } };
           toast.error(
-            err.response?.data?.message || "Failed to load user profile"
+            error.response?.data?.message || "Failed to load user profile"
           );
         }
       }
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Invalid email or password");
+    onError: (err: unknown) => {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Invalid email or password");
     },
   });
 }
@@ -57,21 +62,33 @@ export function useRegister() {
         router.push("/auth/login");
       }
     },
-    onError: (err: any) => {
-      toast.error(err.response?.data?.message || "Registration failed");
+    onError: (err: unknown) => {
+      const error = err as { response?: { data?: { message?: string } } };
+      toast.error(error.response?.data?.message || "Registration failed");
     },
   });
 }
 
 export function useLogout() {
-  const router = useRouter();
   const clearAuth = useAuthStore((state) => state.clearAuth);
 
-  return () => {
-    authService.logout();
+  return async () => {
+    // 1. Navigate away FIRST so the layout never sees user=null (prevents white flash)
+    window.location.href = "/auth/login";
+
+    // 2. Clear state + cookies in the background while navigating
     clearAuth();
+    if (typeof window !== "undefined") {
+      window.localStorage.removeItem("gearup-auth");
+    }
+
+    try {
+      await authService.logout();
+    } catch {
+      // ignore — cookie will expire naturally
+    }
+
     toast.info("Logged out successfully");
-    router.push("/auth/login");
   };
 }
 
