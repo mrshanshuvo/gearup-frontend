@@ -8,7 +8,6 @@ import {
   ShoppingBag,
   ArrowRight,
   CreditCard,
-  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
