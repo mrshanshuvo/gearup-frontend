@@ -11,7 +11,9 @@ This document maps all frontend components, custom hooks, and page routes to the
 | `/auth/login`                 | `useLogin()`         | `/api/auth/login`    | `POST` | Public                    |
 | `/auth/register`              | `useRegister()`      | `/api/auth/register` | `POST` | Public                    |
 | Global Session                | `useMyProfile()`     | `/api/auth/me`       | `GET`  | Admin, Provider, Customer |
-| `/dashboard/customer/profile` | `useUpdateProfile()` | `/api/auth/me`       | `PUT`  | Admin, Provider, Customer |
+| `/dashboard/customer/profile` | `useUpdateProfile()` | `/api/auth/me`       | `PUT`  | Customer                  |
+| `/dashboard/provider/profile` | `useUpdateProfile()` | `/api/auth/me`       | `PUT`  | Provider                  |
+| `/dashboard/admin/profile`    | `useUpdateProfile()` | `/api/auth/me`       | `PUT`  | Admin                     |
 
 ---
 
@@ -35,7 +37,10 @@ This document maps all frontend components, custom hooks, and page routes to the
 | `/dashboard/customer/orders/[id]` | `useCreatePaymentIntent()` | `/api/payments/create`     | `POST`  | Customer                  |
 | `/dashboard/customer/orders/[id]` | `useConfirmPayment()`      | `/api/payments/confirm`    | `POST`  | Customer                  |
 | `/dashboard/customer/orders/[id]` | `useCancelRental()`        | `/api/provider/orders/:id` | `PATCH` | Customer, Provider        |
+| `/dashboard/customer/orders`      | `useCreateReview()`        | `/api/reviews`             | `POST`  | Customer                  |
 | `/dashboard/customer/orders/[id]` | `useCreateReview()`        | `/api/reviews`             | `POST`  | Customer                  |
+| `/payment/success`                | (redirect — no API call)   | —                          | —       | Public (post-payment)     |
+| `/payment/cancel`                 | (redirect — no API call)   | —                          | —       | Public (post-cancel)      |
 
 ---
 
@@ -63,3 +68,16 @@ This document maps all frontend components, custom hooks, and page routes to the
 | `/dashboard/admin/categories` | `useDeleteCategory()`   | `/api/categories/:id`  | `DELETE` | Admin      |
 | `/dashboard/admin/rentals`    | `useAllRentalsAdmin()`  | `/api/admin/rentals`   | `GET`    | Admin      |
 | `/dashboard/admin/gear`       | `useAdminGearList()`    | `/api/admin/gear`      | `GET`    | Admin      |
+
+---
+
+## 🔒 Route Protection (proxy.ts — Next.js v16 Edge Middleware)
+
+| Protected Path          | Guard Logic                                         |
+| ----------------------- | --------------------------------------------------- |
+| `/dashboard/customer/*` | JWT required + `role === "Customer"`                |
+| `/dashboard/provider/*` | JWT required + `role === "Provider"`                |
+| `/dashboard/admin/*`    | JWT required + `role === "Admin"`                   |
+| `/auth/login`           | Redirect to role dashboard if already authenticated |
+| `/auth/register`        | Redirect to role dashboard if already authenticated |
+| Token expiry            | Cookie auto-cleared, redirected to `/auth/login`    |
