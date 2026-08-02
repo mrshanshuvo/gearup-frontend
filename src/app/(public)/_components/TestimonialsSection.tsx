@@ -32,7 +32,7 @@ export function TestimonialsSection() {
   ];
 
   return (
-    <section className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8 xl:max-w-350 2xl:max-w-[1600px]">
       <div className="space-y-2 text-center">
         <Badge
           variant="outline"
@@ -61,7 +61,7 @@ export function TestimonialsSection() {
                   <Star key={i} className="h-4 w-4 fill-amber-400" />
                 ))}
               </div>
-              <p className="text-xs leading-relaxed italic text-slate-600 dark:text-slate-300">
+              <p className="text-xs leading-relaxed text-slate-600 italic dark:text-slate-300">
                 &ldquo;{t.comment}&rdquo;
               </p>
               <div className="flex items-center justify-between border-t border-slate-100 pt-3 dark:border-slate-800">

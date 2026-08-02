@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 
 export function BottomCtaSection() {
   return (
-    <section className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-slate-950 px-6 py-16 text-center text-white shadow-2xl">
+    <section className="relative mx-auto max-w-7xl overflow-hidden rounded-3xl bg-slate-950 px-6 py-16 text-center text-white shadow-2xl xl:max-w-350 2xl:max-w-[1600px]">
       <div className="absolute inset-0 z-0 opacity-30">
         <Image
           src="/hero/pranab-debnath-cp8D7oWxsOE-unsplash.jpg"
@@ -27,7 +27,7 @@ export function BottomCtaSection() {
         <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button
             size="lg"
-            className="bg-rose-600 px-8 font-bold text-white shadow-lg hover:bg-rose-700 cursor-pointer"
+            className="cursor-pointer bg-rose-600 px-8 font-bold text-white shadow-lg hover:bg-rose-700"
             onClick={() => (window.location.href = "/gear")}
           >
             Browse Gear Catalog <ArrowRight className="ml-2 h-5 w-5" />
@@ -35,7 +35,7 @@ export function BottomCtaSection() {
           <Button
             size="lg"
             variant="outline"
-            className="border-white/30 bg-white/10 px-8 font-bold text-white backdrop-blur-md hover:bg-white hover:text-slate-900 cursor-pointer"
+            className="cursor-pointer border-white/30 bg-white/10 px-8 font-bold text-white backdrop-blur-md hover:bg-white hover:text-slate-900"
             onClick={() =>
               (window.location.href = "/auth/register?role=Provider")
             }

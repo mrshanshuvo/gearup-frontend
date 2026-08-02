@@ -99,7 +99,7 @@ function GearCatalogContent() {
   }, [gearItems, sortOption]);
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8 xl:max-w-350 2xl:max-w-[1600px]">
       {/* Header Banner */}
       <div className="flex flex-col justify-between gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-center dark:border-slate-800">
         <div>

@@ -120,7 +120,7 @@ export default function GearDetailPage({
   const isAvailable = gear.stock > 0;
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8 xl:max-w-350 2xl:max-w-[1600px]">
       <Button
         variant="ghost"
         onClick={() => router.back()}

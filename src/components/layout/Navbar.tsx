@@ -99,7 +99,7 @@ export function Navbar() {
 
   return (
     <header className="border-border/80 bg-background/80 sticky top-0 z-50 w-full border-b backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 xl:max-w-350 2xl:max-w-[1600px]">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center">
           <Image

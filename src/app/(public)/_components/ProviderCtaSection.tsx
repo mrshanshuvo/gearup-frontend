@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 
 export function ProviderCtaSection() {
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 xl:max-w-350 2xl:max-w-[1600px]">
       <div className="grid grid-cols-1 items-center gap-12 overflow-hidden rounded-3xl border border-rose-100 bg-rose-50/70 p-8 lg:grid-cols-12 lg:p-12 dark:border-rose-950/50 dark:bg-rose-950/20">
         <div className="space-y-6 lg:col-span-7">
           <Badge className="bg-rose-600 font-bold text-white">
@@ -39,7 +39,7 @@ export function ProviderCtaSection() {
           </ul>
           <Button
             size="lg"
-            className="bg-rose-600 font-bold text-white shadow-lg hover:bg-rose-700 cursor-pointer"
+            className="cursor-pointer bg-rose-600 font-bold text-white shadow-lg hover:bg-rose-700"
             onClick={() =>
               (window.location.href = "/auth/register?role=Provider")
             }

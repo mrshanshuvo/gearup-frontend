@@ -16,7 +16,7 @@ export function FeaturedGearSection({
   gearLoading,
 }: FeaturedGearSectionProps) {
   return (
-    <section className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
+    <section className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8 xl:max-w-350 2xl:max-w-[1600px]">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
@@ -29,7 +29,7 @@ export function FeaturedGearSection({
 
         <Button
           variant="ghost"
-          className="text-primary font-bold hover:text-rose-700 cursor-pointer"
+          className="text-primary cursor-pointer font-bold hover:text-rose-700"
           onClick={() => (window.location.href = "/gear")}
         >
           View All <ArrowRight className="ml-1 inline h-4 w-4" />

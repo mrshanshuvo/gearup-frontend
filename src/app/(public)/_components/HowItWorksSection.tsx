@@ -4,7 +4,7 @@ import { Search, CalendarCheck, ShieldCheck } from "lucide-react";
 export function HowItWorksSection() {
   return (
     <section className="border-y border-slate-200 bg-slate-100 px-4 py-16 sm:px-6 lg:px-8 dark:border-slate-800 dark:bg-slate-900/50">
-      <div className="mx-auto max-w-7xl space-y-12 text-center">
+      <div className="mx-auto max-w-7xl space-y-12 text-center xl:max-w-350 2xl:max-w-[1600px]">
         <div className="space-y-2">
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
             How GearUp Works
@@ -33,8 +33,8 @@ export function HowItWorksSection() {
             </div>
             <h3 className="text-lg font-bold">2. Book Rental Dates</h3>
             <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-              Choose start and end dates with our interactive calendar picker and
-              confirm total cost.
+              Choose start and end dates with our interactive calendar picker
+              and confirm total cost.
             </p>
           </div>
 

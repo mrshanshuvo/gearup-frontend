@@ -6,7 +6,7 @@ import { ShieldCheck, Mail, Phone, MapPin, Heart } from "lucide-react";
 export function Footer() {
   return (
     <footer className="mt-auto w-full border-t border-slate-200 bg-slate-900 text-slate-400 dark:border-slate-800 dark:bg-slate-950">
-      <div className="mx-auto max-w-7xl px-4 pt-16 pb-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 pt-16 pb-8 sm:px-6 lg:px-8 xl:max-w-350 2xl:max-w-[1600px]">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-5">
           {/* Column 1: Brand & Tagline */}
           <div className="space-y-4 lg:col-span-2">
