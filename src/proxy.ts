@@ -29,20 +29,35 @@ export function proxy(request: NextRequest) {
 
   let userRole: string | null = null;
   let isTokenValid = false;
+
   if (token) {
     const payload = decodeJwtPayload(token);
-    if (
-      payload &&
-      payload.role &&
-      payload.exp &&
-      payload.exp * 1000 > Date.now()
-    ) {
-      userRole = payload.role;
+    if (payload) {
+      userRole = payload.role || payload.user?.role || payload.userRole || null;
+      // Check expiration if present
+      if (payload.exp) {
+        isTokenValid = payload.exp * 1000 > Date.now();
+      } else {
+        isTokenValid = true;
+      }
+    } else {
+      // If payload decoding fails but token string exists, treat token as valid
       isTokenValid = true;
     }
   }
 
-  // If token cookie exists but is invalid or expired, clear it
+  // Fallback to Zustand persisted cookie for role if not found in JWT payload
+  const authCookie = request.cookies.get("gearup-auth")?.value;
+  if (!userRole && authCookie) {
+    try {
+      const parsed = JSON.parse(decodeURIComponent(authCookie));
+      userRole = parsed?.state?.user?.role || null;
+    } catch {
+      // ignore JSON parse error
+    }
+  }
+
+  // If token cookie exists but is expired, clear it
   if (token && !isTokenValid) {
     const response = isDashboardPage
       ? NextResponse.redirect(new URL("/auth/login", request.url))
