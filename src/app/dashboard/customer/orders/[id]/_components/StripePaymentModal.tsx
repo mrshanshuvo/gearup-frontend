@@ -41,7 +41,7 @@ export function StripePaymentModal({
     resolver: zodResolver(stripeCardPaymentSchema),
   });
 
-  const onSubmit = async (data: StripeCardPaymentInput) => {
+  const onSubmit = async () => {
     try {
       await confirmPayment.mutateAsync({
         paymentIntentId: transactionId,
