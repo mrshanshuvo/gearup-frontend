@@ -77,9 +77,16 @@ export interface Review {
   createdAt: string;
 }
 
+export interface Meta {
+  page: number;
+  limit: number;
+  total: number;
+}
+
 export interface ApiResponse<T> {
   success: boolean;
   status_code: number;
   message: string;
+  meta?: Meta;
   data: T;
 }

@@ -11,8 +11,8 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
+import { Pagination } from "@/components/ui/Pagination";
 import {
   useProviderOrders,
   useUpdateOrderStatus,
@@ -21,6 +21,9 @@ import { toast } from "sonner";
 
 export default function IncomingOrdersPage() {
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
+
   const { data: ordersData, isLoading } = useProviderOrders();
   const updateStatus = useUpdateOrderStatus();
 
@@ -30,6 +33,12 @@ export default function IncomingOrdersPage() {
     statusFilter === "ALL"
       ? orders
       : orders.filter((o) => o.status === statusFilter);
+
+  const totalPages = Math.ceil(filteredOrders.length / ITEMS_PER_PAGE);
+  const paginatedOrders = filteredOrders.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   const filterTabs = [
     { label: "All Orders", value: "ALL" },
@@ -99,7 +108,7 @@ export default function IncomingOrdersPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {filteredOrders.map((order) => (
+          {paginatedOrders.map((order) => (
             <div
               key={order.id}
               className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:flex-row sm:items-center dark:border-slate-800 dark:bg-slate-900"
@@ -188,6 +197,12 @@ export default function IncomingOrdersPage() {
               </div>
             </div>
           ))}
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
     </div>

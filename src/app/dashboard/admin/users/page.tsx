@@ -14,9 +14,13 @@ import { Badge } from "@/components/ui/badge";
 import { useAllUsers, useUpdateUserStatus } from "@/hooks/useAdminUser";
 import { toast } from "sonner";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
+import { Pagination } from "@/components/ui/Pagination";
 
 export default function UserManagementPage() {
   const [roleFilter, setRoleFilter] = useState<string>("ALL");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 8;
+
   const { data: usersData, isLoading } = useAllUsers();
   const updateStatus = useUpdateUserStatus();
 
@@ -31,6 +35,12 @@ export default function UserManagementPage() {
 
   const filteredUsers =
     roleFilter === "ALL" ? users : users.filter((u) => u.role === roleFilter);
+
+  const totalPages = Math.ceil(filteredUsers.length / ITEMS_PER_PAGE);
+  const paginatedUsers = filteredUsers.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   const roleTabs = [
     { label: "All Users", value: "ALL" },
@@ -142,7 +152,7 @@ export default function UserManagementPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
-                {filteredUsers.map((user) => (
+                {paginatedUsers.map((user) => (
                   <tr
                     key={user.id}
                     className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
@@ -202,6 +212,12 @@ export default function UserManagementPage() {
               </tbody>
             </table>
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
 

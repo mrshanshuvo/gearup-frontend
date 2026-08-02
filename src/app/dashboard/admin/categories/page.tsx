@@ -16,10 +16,13 @@ import {
 import { categorySchema, CategoryInput } from "@/validations/category.schema";
 import { toast } from "sonner";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
+import { Pagination } from "@/components/ui/Pagination";
 
 export default function CategoryManagementPage() {
   const { data: categoryData, isLoading } = useCategories();
   const categories = categoryData?.data || [];
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 8;
 
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
@@ -30,6 +33,12 @@ export default function CategoryManagementPage() {
     id: string;
     name: string;
   } | null>(null);
+
+  const totalPages = Math.ceil(categories.length / ITEMS_PER_PAGE);
+  const paginatedCategories = categories.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   // Inline edit state
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -177,9 +186,8 @@ export default function CategoryManagementPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
-                {categories.map((cat) => {
+                {paginatedCategories.map((cat) => {
                   const isEditing = editingId === cat.id;
-
                   return (
                     <tr
                       key={cat.id}
@@ -261,6 +269,12 @@ export default function CategoryManagementPage() {
               </tbody>
             </table>
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
 

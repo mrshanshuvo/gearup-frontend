@@ -5,12 +5,22 @@ import Image from "next/image";
 import { Package, Tag, Loader2, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAdminGearList } from "@/hooks/useAdminGear";
 import { useCategories } from "@/hooks/useGear";
+import { Pagination } from "@/components/ui/Pagination";
 
 export default function GlobalGearInventoryPage() {
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 8;
 
   const { data: gearData, isLoading } = useAdminGearList();
   const { data: categoryData } = useCategories();
@@ -22,11 +32,18 @@ export default function GlobalGearInventoryPage() {
     const matchesSearch =
       gear.name.toLowerCase().includes(search.toLowerCase()) ||
       gear.brand.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = selectedCategory
-      ? gear.categoryId === selectedCategory
-      : true;
+    const matchesCategory =
+      selectedCategory && selectedCategory !== "all"
+        ? gear.categoryId === selectedCategory
+        : true;
     return matchesSearch && matchesCategory;
   });
+
+  const totalPages = Math.ceil(filteredGear.length / ITEMS_PER_PAGE);
+  const paginatedGear = filteredGear.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
     <div className="space-y-6">
@@ -51,18 +68,32 @@ export default function GlobalGearInventoryPage() {
           <Search className="absolute top-2.5 right-2.5 h-4 w-4 text-slate-400" />
         </div>
 
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm sm:w-48 dark:border-slate-800 dark:bg-slate-950"
-        >
-          <option value="">All Categories</option>
-          {categories.map((cat) => (
-            <option key={cat.id} value={cat.id}>
-              {cat.name}
-            </option>
-          ))}
-        </select>
+        <div className="w-full sm:w-56">
+          <Select
+            value={selectedCategory}
+            onValueChange={(val) => {
+              setSelectedCategory(val || "all");
+              setCurrentPage(1);
+            }}
+          >
+            <SelectTrigger className="w-full font-bold">
+              <SelectValue>
+                {selectedCategory === "all"
+                  ? "All Categories"
+                  : categories.find((c) => c.id === selectedCategory)?.name ||
+                    "All Categories"}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent align="start">
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((cat) => (
+                <SelectItem key={cat.id} value={cat.id}>
+                  {cat.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {/* Global Inventory Table */}
@@ -90,7 +121,7 @@ export default function GlobalGearInventoryPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
-                {filteredGear.map((gear) => (
+                {paginatedGear.map((gear) => (
                   <tr
                     key={gear.id}
                     className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
@@ -148,6 +179,12 @@ export default function GlobalGearInventoryPage() {
               </tbody>
             </table>
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
     </div>

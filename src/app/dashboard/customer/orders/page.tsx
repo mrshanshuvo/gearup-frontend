@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Loader2,
@@ -11,11 +10,11 @@ import {
   CreditCard,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
 import { useCustomerRentals, useCancelRental } from "@/hooks/useRental";
 import { useCreatePaymentIntent } from "@/hooks/usePayment";
 import { StripePaymentModal } from "./[id]/_components/StripePaymentModal";
+import { Pagination } from "@/components/ui/Pagination";
 import { toast } from "sonner";
 
 export default function MyOrdersPage() {
@@ -58,10 +57,19 @@ export default function MyOrdersPage() {
     }
   };
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
+
   const filteredRentals =
     statusFilter === "ALL"
       ? rentals
       : rentals.filter((r) => r.status === statusFilter);
+
+  const totalPages = Math.ceil(filteredRentals.length / ITEMS_PER_PAGE);
+  const paginatedRentals = filteredRentals.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   const filterTabs = [
     { label: "All Orders", value: "ALL" },
@@ -72,34 +80,6 @@ export default function MyOrdersPage() {
     { label: "Returned", value: "RETURNED" },
     { label: "Cancelled", value: "CANCELLED" },
   ];
-
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "PLACED":
-        return (
-          <Badge className="bg-amber-500 text-white">Payment Pending</Badge>
-        );
-      case "CONFIRMED":
-        return <Badge className="bg-blue-500 text-white">Confirmed</Badge>;
-      case "PAID":
-        return <Badge className="bg-purple-500 text-white">Paid</Badge>;
-      case "PICKED_UP":
-        return <Badge className="bg-emerald-600 text-white">Picked Up</Badge>;
-      case "RETURNED":
-        return (
-          <Badge
-            variant="outline"
-            className="border-emerald-600 text-emerald-600"
-          >
-            Returned
-          </Badge>
-        );
-      case "CANCELLED":
-        return <Badge variant="destructive">Cancelled</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
-  };
 
   return (
     <div className="space-y-6">
@@ -117,7 +97,10 @@ export default function MyOrdersPage() {
         {filterTabs.map((tab) => (
           <button
             key={tab.value}
-            onClick={() => setStatusFilter(tab.value)}
+            onClick={() => {
+              setStatusFilter(tab.value);
+              setCurrentPage(1);
+            }}
             className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition-all ${
               statusFilter === tab.value
                 ? "bg-blue-600 text-white shadow-sm"
@@ -152,7 +135,7 @@ export default function MyOrdersPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {filteredRentals.map((order) => (
+          {paginatedRentals.map((order) => (
             <div
               key={order.id}
               className="w-full space-y-4 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-blue-500 dark:border-slate-800 dark:bg-slate-900"
@@ -235,7 +218,7 @@ export default function MyOrdersPage() {
                     { step: "PAID", label: "Payment Confirmed" },
                     { step: "PICKED_UP", label: "Gear Picked Up" },
                     { step: "RETURNED", label: "Completed" },
-                  ].map((st, idx, arr) => {
+                  ].map((st, idx) => {
                     const statusOrder = [
                       "PLACED",
                       "CONFIRMED",
@@ -283,6 +266,12 @@ export default function MyOrdersPage() {
               </div>
             </div>
           ))}
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
 

@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { GearCard } from "@/components/gear/GearCard";
 import { GearSkeleton } from "@/components/gear/GearSkeleton";
+import { Pagination } from "@/components/ui/Pagination";
 import { useCategories, useGearList } from "@/hooks/useGear";
 import { GearItem } from "@/types";
 
@@ -41,6 +42,7 @@ function GearCatalogContent() {
   const minPriceParam = searchParams.get("minPrice") || "";
   const maxPriceParam = searchParams.get("maxPrice") || "";
   const availableOnlyParam = searchParams.get("availableOnly") === "true";
+  const pageParam = parseInt(searchParams.get("page") || "1");
 
   // Form local state
   const [selectedCategory, setSelectedCategory] = useState(categoryIdParam);
@@ -48,6 +50,9 @@ function GearCatalogContent() {
   const [minPrice, setMinPrice] = useState(minPriceParam);
   const [maxPrice, setMaxPrice] = useState(maxPriceParam);
   const [availableOnly, setAvailableOnly] = useState(availableOnlyParam);
+  const [page, setPage] = useState(pageParam);
+
+  const ITEMS_PER_PAGE = 6;
 
   // Queries
   const { data: categoriesData } = useCategories();
@@ -58,6 +63,8 @@ function GearCatalogContent() {
     minPrice: minPrice ? Number(minPrice) : undefined,
     maxPrice: maxPrice ? Number(maxPrice) : undefined,
     availableOnly: availableOnly || undefined,
+    page,
+    limit: ITEMS_PER_PAGE,
   });
 
   const gearItems = React.useMemo(() => gearData?.data || [], [gearData?.data]);
@@ -296,10 +303,26 @@ function GearCatalogContent() {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {sortedGearItems.map((gear) => (
-                <GearCard key={gear.id} gear={gear} />
-              ))}
+            <div className="space-y-8">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {sortedGearItems.map((gear) => (
+                  <GearCard key={gear.id} gear={gear} />
+                ))}
+              </div>
+
+              {/* Server-driven Pagination */}
+              {gearData?.meta && (
+                <Pagination
+                  currentPage={page}
+                  totalPages={Math.ceil(gearData.meta.total / ITEMS_PER_PAGE)}
+                  onPageChange={(newPage) => {
+                    setPage(newPage);
+                    const params = new URLSearchParams(searchParams.toString());
+                    params.set("page", String(newPage));
+                    router.push(`/gear?${params.toString()}`);
+                  }}
+                />
+              )}
             </div>
           )}
         </main>

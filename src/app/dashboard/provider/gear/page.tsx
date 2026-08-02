@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { PlusCircle, Edit3, Trash2, Tag, Loader2, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,11 +9,14 @@ import { useProviderGearList, useDeleteGear } from "@/hooks/useProviderGear";
 import useAuthStore from "@/stores/authStore";
 import { toast } from "sonner";
 import { ConfirmModal } from "@/components/ui/ConfirmModal";
+import { Pagination } from "@/components/ui/Pagination";
 
 export default function MyGearInventoryPage() {
   const user = useAuthStore((state) => state.user);
   const { data: gearData, isLoading } = useProviderGearList(user?.id);
   const deleteGear = useDeleteGear();
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
 
   // Delete modal state
   const [deleteTarget, setDeleteTarget] = React.useState<{
@@ -22,6 +25,11 @@ export default function MyGearInventoryPage() {
   } | null>(null);
 
   const gearItems = gearData?.data || [];
+  const totalPages = Math.ceil(gearItems.length / ITEMS_PER_PAGE);
+  const paginatedGear = gearItems.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   const confirmDelete = async () => {
     if (!deleteTarget) return;
@@ -96,7 +104,7 @@ export default function MyGearInventoryPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
-                {gearItems.map((gear) => (
+                {paginatedGear.map((gear) => (
                   <tr
                     key={gear.id}
                     className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
@@ -172,6 +180,12 @@ export default function MyGearInventoryPage() {
               </tbody>
             </table>
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
 

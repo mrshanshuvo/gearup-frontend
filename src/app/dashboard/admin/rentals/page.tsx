@@ -2,12 +2,15 @@
 
 import React, { useState } from "react";
 import { ClipboardList, Loader2, Calendar } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
+import { Pagination } from "@/components/ui/Pagination";
 import { useAllRentalsAdmin } from "@/hooks/useAdminGear";
 
 export default function AllRentalsAdminPage() {
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 8;
+
   const { data: rentalsData, isLoading } = useAllRentalsAdmin();
 
   const rentals = rentalsData?.data || [];
@@ -16,6 +19,12 @@ export default function AllRentalsAdminPage() {
     statusFilter === "ALL"
       ? rentals
       : rentals.filter((r) => r.status === statusFilter);
+
+  const totalPages = Math.ceil(filteredRentals.length / ITEMS_PER_PAGE);
+  const paginatedRentals = filteredRentals.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   const filterTabs = [
     { label: "All Orders", value: "ALL" },
@@ -31,7 +40,6 @@ export default function AllRentalsAdminPage() {
     (acc, r) => acc + (r.totalCost || 0),
     0
   );
-
 
   return (
     <div className="space-y-6">
@@ -60,7 +68,10 @@ export default function AllRentalsAdminPage() {
         {filterTabs.map((tab) => (
           <button
             key={tab.value}
-            onClick={() => setStatusFilter(tab.value)}
+            onClick={() => {
+              setStatusFilter(tab.value);
+              setCurrentPage(1);
+            }}
             className={`rounded-full px-4 py-2 text-xs font-bold whitespace-nowrap transition-all ${
               statusFilter === tab.value
                 ? "bg-blue-600 text-white shadow-sm"
@@ -99,7 +110,7 @@ export default function AllRentalsAdminPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm dark:divide-slate-800">
-                {filteredRentals.map((order) => (
+                {paginatedRentals.map((order) => (
                   <tr
                     key={order.id}
                     className="transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/50"
@@ -129,6 +140,12 @@ export default function AllRentalsAdminPage() {
               </tbody>
             </table>
           </div>
+
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
     </div>
