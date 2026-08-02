@@ -8,21 +8,28 @@ import { Badge } from "@/components/ui/badge";
 import { useProviderGearList, useDeleteGear } from "@/hooks/useProviderGear";
 import useAuthStore from "@/stores/authStore";
 import { toast } from "sonner";
+import { ConfirmModal } from "@/components/ui/ConfirmModal";
 
 export default function MyGearInventoryPage() {
   const user = useAuthStore((state) => state.user);
   const { data: gearData, isLoading } = useProviderGearList(user?.id);
   const deleteGear = useDeleteGear();
 
+  // Delete modal state
+  const [deleteTarget, setDeleteTarget] = React.useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
   const gearItems = gearData?.data || [];
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete "${name}" from inventory?`))
-      return;
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
 
     try {
-      await deleteGear.mutateAsync(id);
-      toast.success(`"${name}" deleted successfully`);
+      await deleteGear.mutateAsync(deleteTarget.id);
+      toast.success(`"${deleteTarget.name}" deleted successfully`);
+      setDeleteTarget(null);
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       toast.error(error.response?.data?.message || "Failed to delete gear");
@@ -153,7 +160,9 @@ export default function MyGearInventoryPage() {
                         size="sm"
                         variant="outline"
                         className="text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
-                        onClick={() => handleDelete(gear.id, gear.name)}
+                        onClick={() =>
+                          setDeleteTarget({ id: gear.id, name: gear.name })
+                        }
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
@@ -165,6 +174,17 @@ export default function MyGearInventoryPage() {
           </div>
         </div>
       )}
+
+      {/* Confirm Delete Modal */}
+      <ConfirmModal
+        isOpen={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={confirmDelete}
+        title="Delete Gear Listing"
+        description={`Are you sure you want to delete "${deleteTarget?.name}" from your active inventory? This listing will no longer be visible to renters.`}
+        confirmText="Delete Listing"
+        isLoading={deleteGear.isPending}
+      />
     </div>
   );
 }

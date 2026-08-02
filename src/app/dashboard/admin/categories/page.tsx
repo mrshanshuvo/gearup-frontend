@@ -15,6 +15,7 @@ import {
 } from "@/hooks/useCategory";
 import { categorySchema, CategoryInput } from "@/validations/category.schema";
 import { toast } from "sonner";
+import { ConfirmModal } from "@/components/ui/ConfirmModal";
 
 export default function CategoryManagementPage() {
   const { data: categoryData, isLoading } = useCategories();
@@ -23,6 +24,12 @@ export default function CategoryManagementPage() {
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
   const deleteCategory = useDeleteCategory();
+
+  // Delete modal state
+  const [deleteTarget, setDeleteTarget] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   // Inline edit state
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -80,12 +87,13 @@ export default function CategoryManagementPage() {
     }
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete category "${name}"?`)) return;
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
 
     try {
-      await deleteCategory.mutateAsync(id);
-      toast.success(`Category "${name}" deleted`);
+      await deleteCategory.mutateAsync(deleteTarget.id);
+      toast.success(`Category "${deleteTarget.name}" deleted`);
+      setDeleteTarget(null);
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       toast.error(error.response?.data?.message || "Failed to delete category");
@@ -238,7 +246,9 @@ export default function CategoryManagementPage() {
                               size="sm"
                               variant="outline"
                               className="h-8 text-red-600 hover:bg-red-50 dark:hover:bg-red-950"
-                              onClick={() => handleDelete(cat.id, cat.name)}
+                              onClick={() =>
+                                setDeleteTarget({ id: cat.id, name: cat.name })
+                              }
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
@@ -253,6 +263,17 @@ export default function CategoryManagementPage() {
           </div>
         </div>
       )}
+
+      {/* Confirm Delete Modal */}
+      <ConfirmModal
+        isOpen={Boolean(deleteTarget)}
+        onClose={() => setDeleteTarget(null)}
+        onConfirm={confirmDelete}
+        title="Delete Category"
+        description={`Are you sure you want to delete category "${deleteTarget?.name}"? All associated gear will remain, but this category tag will be removed.`}
+        confirmText="Delete Category"
+        isLoading={deleteCategory.isPending}
+      />
     </div>
   );
 }

@@ -13,11 +13,19 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAllUsers, useUpdateUserStatus } from "@/hooks/useAdminUser";
 import { toast } from "sonner";
+import { ConfirmModal } from "@/components/ui/ConfirmModal";
 
 export default function UserManagementPage() {
   const [roleFilter, setRoleFilter] = useState<string>("ALL");
   const { data: usersData, isLoading } = useAllUsers();
   const updateStatus = useUpdateUserStatus();
+
+  // Confirm status toggle modal state
+  const [statusTarget, setStatusTarget] = useState<{
+    id: string;
+    name: string;
+    currentStatus: string;
+  } | null>(null);
 
   const users = usersData?.data || [];
 
@@ -31,22 +39,19 @@ export default function UserManagementPage() {
     { label: "Admins", value: "Admin" },
   ];
 
-  const handleToggleStatus = async (
-    id: string,
-    currentStatus: string,
-    name: string
-  ) => {
-    const nextStatus = currentStatus === "Active" ? "Inactive" : "Active";
-    if (
-      !confirm(
-        `Are you sure you want to change ${name}'s status to ${nextStatus}?`
-      )
-    )
-      return;
+  const confirmToggleStatus = async () => {
+    if (!statusTarget) return;
+
+    const nextStatus =
+      statusTarget.currentStatus === "Active" ? "Inactive" : "Active";
 
     try {
-      await updateStatus.mutateAsync({ id, active_status: nextStatus });
-      toast.success(`User ${name} is now ${nextStatus}`);
+      await updateStatus.mutateAsync({
+        id: statusTarget.id,
+        active_status: nextStatus,
+      });
+      toast.success(`User ${statusTarget.name} is now ${nextStatus}`);
+      setStatusTarget(null);
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       toast.error(
@@ -178,11 +183,11 @@ export default function UserManagementPage() {
                               : "border-blue-200 font-bold text-blue-600 hover:bg-blue-50"
                           }
                           onClick={() =>
-                            handleToggleStatus(
-                              user.id,
-                              user.active_status,
-                              user.name
-                            )
+                            setStatusTarget({
+                              id: user.id,
+                              name: user.name,
+                              currentStatus: user.active_status,
+                            })
                           }
                         >
                           <Power className="mr-1 h-3.5 w-3.5" />
@@ -199,6 +204,30 @@ export default function UserManagementPage() {
           </div>
         </div>
       )}
+
+      {/* Confirm Status Change Modal */}
+      <ConfirmModal
+        isOpen={Boolean(statusTarget)}
+        onClose={() => setStatusTarget(null)}
+        onConfirm={confirmToggleStatus}
+        title={
+          statusTarget?.currentStatus === "Active"
+            ? "Deactivate Account"
+            : "Activate Account"
+        }
+        description={`Are you sure you want to change ${statusTarget?.name}'s status to ${
+          statusTarget?.currentStatus === "Active" ? "Inactive" : "Active"
+        }?`}
+        confirmText={
+          statusTarget?.currentStatus === "Active"
+            ? "Deactivate User"
+            : "Activate User"
+        }
+        variant={
+          statusTarget?.currentStatus === "Active" ? "destructive" : "default"
+        }
+        isLoading={updateStatus.isPending}
+      />
     </div>
   );
 }
