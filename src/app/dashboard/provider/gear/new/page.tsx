@@ -1,28 +1,41 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowLeft, Loader2, PlusCircle } from "lucide-react";
+import { ArrowLeft, Loader2, PlusCircle, Upload, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useCategories } from "@/hooks/useGear";
 import { useCreateGear } from "@/hooks/useProviderGear";
+import { useUploadImage } from "@/hooks/useUpload";
 import { createGearSchema, CreateGearInput } from "@/validations/gear.schema";
 import { toast } from "sonner";
 
 export default function AddGearPage() {
   const router = useRouter();
+
   const { data: categoryData } = useCategories();
   const categories = categoryData?.data || [];
 
   const createGear = useCreateGear();
+  const uploadImage = useUploadImage();
 
   const {
     register,
     handleSubmit,
+    control,
+    setValue,
     formState: { errors },
   } = useForm<CreateGearInput>({
     resolver: zodResolver(createGearSchema),
@@ -31,6 +44,26 @@ export default function AddGearPage() {
       pricePerDay: 10,
     },
   });
+
+  const currentImageUrl = useWatch({ control, name: "imageUrl" });
+  const currentCategoryId = useWatch({ control, name: "categoryId" });
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Fast local preview while Cloudinary uploads
+    const localPreview = URL.createObjectURL(file);
+    setValue("imageUrl", localPreview);
+
+    try {
+      const res = await uploadImage.mutateAsync(file);
+      setValue("imageUrl", res.data.url);
+      toast.success("Image uploaded successfully!");
+    } catch {
+      setValue("imageUrl", "");
+    }
+  };
 
   const onSubmit = async (data: CreateGearInput) => {
     try {
@@ -97,17 +130,26 @@ export default function AddGearPage() {
                 <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
                   Category
                 </label>
-                <select
-                  {...register("categoryId")}
-                  className="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-sm dark:border-slate-800 dark:bg-slate-950"
+                <Select
+                  value={currentCategoryId || ""}
+                  onValueChange={(val) => {
+                    if (val) setValue("categoryId", val);
+                  }}
                 >
-                  <option value="">Select a Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
+                  <SelectTrigger className="w-full font-medium">
+                    <SelectValue placeholder="Select a Category">
+                      {categories.find((c) => c.id === currentCategoryId)
+                        ?.name || "Select a Category"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent align="start">
+                    {categories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 {errors.categoryId && (
                   <p className="text-xs text-red-500">
                     {errors.categoryId.message}
@@ -150,19 +192,66 @@ export default function AddGearPage() {
               </div>
             </div>
 
-            {/* Image URL */}
-            <div className="space-y-1">
+            {/* Equipment Image Dropzone & Preview */}
+            <div className="space-y-2">
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-                Image URL (Optional)
+                Equipment Image
               </label>
-              <Input
-                {...register("imageUrl")}
-                placeholder="https://images.unsplash.com/photo-..."
-              />
-              {errors.imageUrl && (
-                <p className="text-xs text-red-500">
-                  {errors.imageUrl.message}
-                </p>
+
+              {currentImageUrl ? (
+                <div className="group relative flex h-52 w-full items-center justify-center overflow-hidden rounded-2xl border border-slate-200 bg-slate-900 dark:border-slate-800">
+                  <Image
+                    src={currentImageUrl}
+                    alt="Gear Preview"
+                    fill
+                    className={`object-cover transition-all ${
+                      uploadImage.isPending
+                        ? "opacity-40"
+                        : "group-hover:opacity-75"
+                    }`}
+                  />
+                  {uploadImage.isPending ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
+                      <Loader2 className="h-8 w-8 animate-spin text-white" />
+                      <p className="mt-2 text-xs font-bold text-white">
+                        Uploading to Cloud Storage...
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => setValue("imageUrl", "")}
+                        className="font-bold"
+                      >
+                        <X className="mr-1 h-4 w-4" /> Remove & Upload Different
+                        Image
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <label className="flex h-44 w-full cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 transition-colors hover:border-emerald-500 hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-emerald-500 dark:hover:bg-slate-900">
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
+                      <Upload className="h-6 w-6" />
+                    </div>
+                    <p className="mb-1 text-sm font-bold text-slate-900 dark:text-slate-100">
+                      Click to upload equipment image
+                    </p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">
+                      PNG, JPG, WEBP (Uploaded directly to Cloudinary)
+                    </p>
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileUpload}
+                  />
+                </label>
               )}
             </div>
 

@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
 import { Pagination } from "@/components/ui/Pagination";
+import { ConfirmModal } from "@/components/ui/ConfirmModal";
 import {
   useProviderOrders,
   useUpdateOrderStatus,
@@ -22,7 +23,14 @@ import { toast } from "sonner";
 export default function IncomingOrdersPage() {
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [currentPage, setCurrentPage] = useState(1);
-  const ITEMS_PER_PAGE = 5;
+  const ITEMS_PER_PAGE = 8;
+
+  // Status transition confirmation modal state
+  const [confirmState, setConfirmState] = useState<{
+    id: string;
+    newStatus: string;
+    actionLabel: string;
+  } | null>(null);
 
   const { data: ordersData, isLoading } = useProviderOrders();
   const updateStatus = useUpdateOrderStatus();
@@ -54,11 +62,31 @@ export default function IncomingOrdersPage() {
     try {
       await updateStatus.mutateAsync({ id, status: newStatus });
       toast.success(`Order status updated to ${newStatus}`);
+      setConfirmState(null);
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       toast.error(
         error.response?.data?.message || "Failed to update order status"
       );
+    }
+  };
+
+  const getStatusLabel = (status?: string) => {
+    switch (status) {
+      case "PLACED":
+        return "Placed";
+      case "CONFIRMED":
+        return "Confirmed";
+      case "PAID":
+        return "Paid";
+      case "PICKED_UP":
+        return "Picked Up";
+      case "RETURNED":
+        return "Returned";
+      case "CANCELLED":
+        return "Cancelled";
+      default:
+        return status || "";
     }
   };
 
@@ -157,13 +185,17 @@ export default function IncomingOrdersPage() {
                   </p>
                 </div>
 
-                {/* Status transition action controls */}
+                {/* Status transition action controls with confirmation */}
                 {order.status === "PLACED" && (
                   <Button
                     size="sm"
                     disabled={updateStatus.isPending}
                     onClick={() =>
-                      handleStatusTransition(order.id, "CONFIRMED")
+                      setConfirmState({
+                        id: order.id,
+                        newStatus: "CONFIRMED",
+                        actionLabel: "Confirm Booking",
+                      })
                     }
                     className="bg-blue-600 font-bold text-white hover:bg-blue-700"
                   >
@@ -176,7 +208,11 @@ export default function IncomingOrdersPage() {
                     size="sm"
                     disabled={updateStatus.isPending}
                     onClick={() =>
-                      handleStatusTransition(order.id, "PICKED_UP")
+                      setConfirmState({
+                        id: order.id,
+                        newStatus: "PICKED_UP",
+                        actionLabel: "Mark Picked Up",
+                      })
                     }
                     className="bg-purple-600 font-bold text-white hover:bg-purple-700"
                   >
@@ -188,7 +224,13 @@ export default function IncomingOrdersPage() {
                   <Button
                     size="sm"
                     disabled={updateStatus.isPending}
-                    onClick={() => handleStatusTransition(order.id, "RETURNED")}
+                    onClick={() =>
+                      setConfirmState({
+                        id: order.id,
+                        newStatus: "RETURNED",
+                        actionLabel: "Mark Returned",
+                      })
+                    }
                     className="bg-emerald-600 font-bold text-white hover:bg-emerald-700"
                   >
                     <RotateCcw className="mr-1.5 h-4 w-4" /> Mark Returned
@@ -205,6 +247,24 @@ export default function IncomingOrdersPage() {
           />
         </div>
       )}
+
+      {/* Action Confirmation Modal */}
+      <ConfirmModal
+        isOpen={!!confirmState}
+        onClose={() => setConfirmState(null)}
+        onConfirm={() => {
+          if (confirmState) {
+            handleStatusTransition(confirmState.id, confirmState.newStatus);
+          }
+        }}
+        title={`Confirm Action: ${confirmState?.actionLabel}`}
+        description={`Are you sure you want to change this rental order status to "${getStatusLabel(
+          confirmState?.newStatus
+        )}"?`}
+        confirmText="Confirm Change"
+        variant="default"
+        isLoading={updateStatus.isPending}
+      />
     </div>
   );
 }
