@@ -19,7 +19,28 @@ import {
 import { useLogin } from "@/hooks/useAuth";
 import { loginSchema, LoginInput } from "@/validations/auth.schema";
 
+import { useSearchParams } from "next/navigation";
+
 export default function LoginPage() {
+  return (
+    <React.Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-rose-600" />
+        </div>
+      }
+    >
+      <LoginFormContent />
+    </React.Suspense>
+  );
+}
+
+function LoginFormContent() {
+  const searchParams = useSearchParams();
+  const roleParam = searchParams.get("role");
+  const registerHref = roleParam
+    ? `/auth/register?role=${roleParam}`
+    : "/auth/register";
   const [showPassword, setShowPassword] = useState(false);
   const { mutate: login, isPending } = useLogin();
 
@@ -40,14 +61,19 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="space-y-2 text-center">
           <div className="mx-auto flex h-14 w-auto items-center justify-center">
-            <Image
-              src="/main_logo.svg"
-              alt="GearUp Logo"
-              width={160}
-              height={50}
-              className="h-12 w-auto object-contain"
-              priority
-            />
+            <Link
+              href="/"
+              className="inline-block transition-opacity hover:opacity-90"
+            >
+              <Image
+                src="/main_logo.svg"
+                alt="GearUp Logo"
+                width={160}
+                height={50}
+                className="h-12 w-auto object-contain"
+                priority
+              />
+            </Link>
           </div>
           <CardTitle className="text-2xl font-bold tracking-tight">
             Welcome back to GearUp
@@ -124,7 +150,7 @@ export default function LoginPage() {
             <p className="text-center text-sm text-slate-600 dark:text-slate-400">
               Don&apos;t have an account?{" "}
               <Link
-                href="/auth/register"
+                href={registerHref}
                 className="text-primary font-bold hover:underline"
               >
                 Register

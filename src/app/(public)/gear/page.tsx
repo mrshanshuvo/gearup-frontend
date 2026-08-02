@@ -129,10 +129,22 @@ function GearCatalogContent() {
           </span>
           <Select
             value={sortOption}
-            onValueChange={(val) => setSortOption(val)}
+            onValueChange={(val) => {
+              if (val) setSortOption(val);
+            }}
           >
-            <SelectTrigger className="h-9 w-[170px] text-xs font-semibold">
-              <SelectValue placeholder="Sort order" />
+            <SelectTrigger className="h-9 w-48 text-xs font-semibold">
+              <SelectValue placeholder="Sort order">
+                {sortOption === "price-low"
+                  ? "Price: Low to High"
+                  : sortOption === "price-high"
+                    ? "Price: High to Low"
+                    : sortOption === "newest"
+                      ? "Newest Listed"
+                      : sortOption === "name-asc"
+                        ? "Name: A to Z"
+                        : "Sort: Featured"}
+              </SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="featured">Sort: Featured</SelectItem>
@@ -186,12 +198,17 @@ function GearCatalogContent() {
             </label>
             <Select
               value={selectedCategory || "all"}
-              onValueChange={(val) =>
-                setSelectedCategory(val === "all" ? "" : val)
-              }
+              onValueChange={(val) => {
+                setSelectedCategory(val === "all" || !val ? "" : val);
+              }}
             >
               <SelectTrigger className="w-full text-sm">
-                <SelectValue placeholder="All Categories" />
+                <SelectValue placeholder="All Categories">
+                  {!selectedCategory || selectedCategory === "all"
+                    ? "All Categories"
+                    : categories.find((c) => c.id === selectedCategory)?.name ||
+                      "All Categories"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Categories</SelectItem>

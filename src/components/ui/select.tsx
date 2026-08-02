@@ -61,9 +61,9 @@ function SelectContent({
   children,
   side = "bottom",
   sideOffset = 4,
-  align = "center",
+  align = "start",
   alignOffset = 0,
-  alignItemWithTrigger = true,
+  alignItemWithTrigger = false,
   ...props
 }: SelectPrimitive.Popup.Props &
   Pick<
@@ -120,7 +120,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground relative flex w-full cursor-default items-center gap-1.5 rounded-md py-1 pr-8 pl-1.5 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
+        "relative flex w-full cursor-pointer items-center gap-1.5 rounded-md py-1.5 pr-8 pl-2.5 text-sm outline-hidden transition-colors select-none focus:bg-rose-50 focus:text-rose-600 data-disabled:pointer-events-none data-disabled:opacity-50 data-selected:bg-rose-50 data-selected:font-medium data-selected:text-rose-600 dark:focus:bg-rose-950/40 dark:focus:text-rose-400 dark:data-selected:bg-rose-950/50 dark:data-selected:text-rose-400 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
         className
       )}
       {...props}
@@ -130,10 +130,10 @@ function SelectItem({
       </SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator
         render={
-          <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center" />
+          <span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center text-rose-600 dark:text-rose-400" />
         }
       >
-        <CheckIcon className="pointer-events-none" />
+        <CheckIcon className="size-4 stroke-[2.5] text-rose-600 dark:text-rose-400" />
       </SelectPrimitive.ItemIndicator>
     </SelectPrimitive.Item>
   );

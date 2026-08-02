@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import Image from "next/image";
@@ -19,8 +19,27 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useRegister } from "@/hooks/useAuth";
 import { registerSchema, RegisterInput } from "@/validations/auth.schema";
+import { useSearchParams } from "next/navigation";
 
 export default function RegisterPage() {
+  return (
+    <React.Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-rose-600" />
+        </div>
+      }
+    >
+      <RegisterFormContent />
+    </React.Suspense>
+  );
+}
+
+function RegisterFormContent() {
+  const searchParams = useSearchParams();
+  const initialRole =
+    searchParams.get("role") === "Provider" ? "Provider" : "Customer";
+
   const [showPassword, setShowPassword] = useState(false);
   const { mutate: registerUser, isPending } = useRegister();
 
@@ -28,16 +47,20 @@ export default function RegisterPage() {
     register,
     handleSubmit,
     setValue,
-    watch,
+    control,
     formState: { errors },
   } = useForm<RegisterInput>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      role: "Customer",
+      role: initialRole,
     },
   });
 
-  const selectedRole = watch("role");
+  const selectedRole = useWatch({
+    control,
+    name: "role",
+    defaultValue: initialRole,
+  });
 
   const onSubmit = (data: RegisterInput) => {
     registerUser(data);
@@ -48,14 +71,19 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="space-y-2 text-center">
           <div className="mx-auto flex h-14 w-auto items-center justify-center">
-            <Image
-              src="/main_logo.svg"
-              alt="GearUp Logo"
-              width={160}
-              height={50}
-              className="h-12 w-auto object-contain"
-              priority
-            />
+            <Link
+              href="/"
+              className="inline-block transition-opacity hover:opacity-90"
+            >
+              <Image
+                src="/main_logo.svg"
+                alt="GearUp Logo"
+                width={160}
+                height={50}
+                className="h-12 w-auto object-contain"
+                priority
+              />
+            </Link>
           </div>
           <CardTitle className="text-2xl font-bold tracking-tight">
             Create a GearUp Account
