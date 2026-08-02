@@ -57,13 +57,18 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  // If token cookie exists but is expired, clear it
+  const refreshTokenCookie = request.cookies.get("refreshToken")?.value;
+
+  // If token cookie exists but is expired, check if we have a refresh token before deleting
   if (token && !isTokenValid) {
-    const response = isDashboardPage
-      ? NextResponse.redirect(new URL("/auth/login", request.url))
-      : NextResponse.next();
-    response.cookies.delete("accessToken");
-    return response;
+    if (!refreshTokenCookie) {
+      const response = isDashboardPage
+        ? NextResponse.redirect(new URL("/auth/login", request.url))
+        : NextResponse.next();
+      response.cookies.delete("accessToken");
+      return response;
+    }
+    // If refreshToken exists, allow request through to client so Axios interceptor can refresh
   }
 
   // Redirect authenticated users away from auth pages to their dashboard
@@ -76,7 +81,8 @@ export function proxy(request: NextRequest) {
 
   // Protect Dashboard Routes
   if (isDashboardPage) {
-    if (!token || !userRole) {
+    // If no accessToken and no refreshToken, redirect to login
+    if ((!token && !refreshTokenCookie) || (!userRole && !refreshTokenCookie)) {
       const loginUrl = new URL("/auth/login", request.url);
       loginUrl.searchParams.set("redirect", pathname);
       return NextResponse.redirect(loginUrl);
