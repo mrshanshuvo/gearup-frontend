@@ -45,6 +45,19 @@ export const authService = {
     return response.data;
   },
 
+  async refreshToken(): Promise<ApiResponse<AuthResponseData>> {
+    const response = await axiosInstance.post<ApiResponse<AuthResponseData>>(
+      "/auth/refresh-token"
+    );
+    if (response.data.data?.accessToken) {
+      Cookies.set("accessToken", response.data.data.accessToken, {
+        expires: 7,
+        path: "/",
+      });
+    }
+    return response.data;
+  },
+
   async logout(): Promise<void> {
     try {
       await axiosInstance.post("/auth/logout");

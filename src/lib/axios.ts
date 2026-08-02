@@ -41,12 +41,23 @@ axiosInstance.interceptors.response.use(
         );
 
         if (data?.data?.accessToken) {
-          useAuthStore.getState().setAccessToken(data.data.accessToken);
-          originalRequest.headers.Authorization = `Bearer ${data.data.accessToken}`;
+          const newAccessToken = data.data.accessToken;
+          useAuthStore.getState().setAccessToken(newAccessToken);
+
+          // Sync cookie so proxy.ts (middleware) also gets updated token
+          const Cookies = (await import("js-cookie")).default;
+          Cookies.set("accessToken", newAccessToken, {
+            expires: 7,
+            path: "/",
+          });
+
+          originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
           return axiosInstance(originalRequest);
         }
       } catch {
         useAuthStore.getState().clearAuth();
+        const Cookies = (await import("js-cookie")).default;
+        Cookies.remove("accessToken", { path: "/" });
       }
     }
 
