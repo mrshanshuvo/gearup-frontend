@@ -60,7 +60,6 @@ export function StripePaymentModal({
 
   const handleCancelClick = () => {
     onClose();
-    router.push(`/payment/cancel?orderId=${orderId}`);
   };
 
   return (
