@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import useAuthStore from "@/stores/authStore";
 
 const API_BASE_URL =
@@ -12,12 +13,20 @@ export const axiosInstance = axios.create({
   },
 });
 
-// Request interceptor to attach JWT token
+// Request interceptor to attach JWT token and ensure cookie stays in sync
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().accessToken;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+
+      // Ensure cookie is synced with memory token during SPA client navigation
+      if (!Cookies.get("accessToken")) {
+        Cookies.set("accessToken", token, {
+          expires: 7,
+          path: "/",
+        });
+      }
     }
     return config;
   },
@@ -45,7 +54,6 @@ axiosInstance.interceptors.response.use(
           useAuthStore.getState().setAccessToken(newAccessToken);
 
           // Sync cookie so proxy.ts (middleware) also gets updated token
-          const Cookies = (await import("js-cookie")).default;
           Cookies.set("accessToken", newAccessToken, {
             expires: 7,
             path: "/",
@@ -56,7 +64,6 @@ axiosInstance.interceptors.response.use(
         }
       } catch {
         useAuthStore.getState().clearAuth();
-        const Cookies = (await import("js-cookie")).default;
         Cookies.remove("accessToken", { path: "/" });
       }
     }

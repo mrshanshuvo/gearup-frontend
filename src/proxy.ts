@@ -89,16 +89,24 @@ export function proxy(request: NextRequest) {
     }
 
     // Role-based Path Access Control
-    if (pathname.startsWith("/dashboard/admin") && userRole !== "Admin") {
-      return NextResponse.redirect(new URL("/auth/login", request.url));
-    }
+    if (userRole) {
+      if (pathname.startsWith("/dashboard/admin") && userRole !== "Admin") {
+        return NextResponse.redirect(new URL("/auth/login", request.url));
+      }
 
-    if (pathname.startsWith("/dashboard/provider") && userRole !== "Provider") {
-      return NextResponse.redirect(new URL("/auth/login", request.url));
-    }
+      if (
+        pathname.startsWith("/dashboard/provider") &&
+        userRole !== "Provider"
+      ) {
+        return NextResponse.redirect(new URL("/auth/login", request.url));
+      }
 
-    if (pathname.startsWith("/dashboard/customer") && userRole !== "Customer") {
-      return NextResponse.redirect(new URL("/auth/login", request.url));
+      if (
+        pathname.startsWith("/dashboard/customer") &&
+        userRole !== "Customer"
+      ) {
+        return NextResponse.redirect(new URL("/auth/login", request.url));
+      }
     }
   }
 
