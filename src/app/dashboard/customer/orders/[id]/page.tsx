@@ -11,6 +11,7 @@ import {
   Loader2,
   AlertCircle,
   Tag,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -19,6 +20,7 @@ import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
 import { useRentalDetail, useCancelRental } from "@/hooks/useRental";
 import { useCreatePaymentIntent } from "@/hooks/usePayment";
 import { StripePaymentModal } from "./_components/StripePaymentModal";
+import { ReviewModal } from "../_components/ReviewModal";
 import { toast } from "sonner";
 
 export default function OrderDetailPage({
@@ -42,6 +44,7 @@ export default function OrderDetailPage({
   const order = orderResponse?.data;
 
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(false);
   const [activeTransactionId, setActiveTransactionId] = useState("");
 
   const handlePayNow = async () => {
@@ -139,6 +142,15 @@ export default function OrderDetailPage({
                 Pay ${order.totalCost} Now
               </Button>
             </>
+          )}
+          {order.status === "RETURNED" && (
+            <Button
+              onClick={() => setShowReviewModal(true)}
+              className="cursor-pointer bg-amber-500 font-bold text-white shadow-md shadow-amber-500/20 hover:bg-amber-600"
+            >
+              <Star className="mr-2 h-4 w-4 fill-white text-white" />
+              Leave Equipment Review
+            </Button>
           )}
         </div>
       </div>
@@ -257,6 +269,19 @@ export default function OrderDetailPage({
           onClose={() => setShowPaymentModal(false)}
           onSuccess={() => {
             setShowPaymentModal(false);
+            refetch();
+          }}
+        />
+      )}
+
+      {/* Review Submission Modal Component */}
+      {showReviewModal && order.gearItemId && (
+        <ReviewModal
+          gearItemId={order.gearItemId}
+          gearName={order.gearItem?.name}
+          onClose={() => setShowReviewModal(false)}
+          onSuccess={() => {
+            setShowReviewModal(false);
             refetch();
           }}
         />

@@ -8,12 +8,14 @@ import {
   ShoppingBag,
   ArrowRight,
   CreditCard,
+  Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { RentalStatusBadge } from "@/components/ui/RentalStatusBadge";
 import { useCustomerRentals, useCancelRental } from "@/hooks/useRental";
 import { useCreatePaymentIntent } from "@/hooks/usePayment";
 import { StripePaymentModal } from "./[id]/_components/StripePaymentModal";
+import { ReviewModal } from "./_components/ReviewModal";
 import { Pagination } from "@/components/ui/Pagination";
 import { toast } from "sonner";
 
@@ -29,6 +31,11 @@ export default function MyOrdersPage() {
     id: string;
     totalCost: number;
     transactionId: string;
+  } | null>(null);
+
+  const [activeReviewOrder, setActiveReviewOrder] = useState<{
+    gearItemId: string;
+    gearName?: string;
   } | null>(null);
 
   const handlePayNow = async (orderId: string, totalCost: number) => {
@@ -283,6 +290,19 @@ export default function MyOrdersPage() {
           onClose={() => setActivePaymentOrder(null)}
           onSuccess={() => {
             setActivePaymentOrder(null);
+            refetch();
+          }}
+        />
+      )}
+
+      {/* Review Submission Modal */}
+      {activeReviewOrder && (
+        <ReviewModal
+          gearItemId={activeReviewOrder.gearItemId}
+          gearName={activeReviewOrder.gearName}
+          onClose={() => setActiveReviewOrder(null)}
+          onSuccess={() => {
+            setActiveReviewOrder(null);
             refetch();
           }}
         />
